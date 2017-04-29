@@ -1,0 +1,13 @@
+{
+    "root_place": "~/Downloads/Downloaded/",
+    "h_manga_place": "~/Downloads/Downloaded/h_manga/",
+    "h_anime_place": "~/Downloads/Downloaded/h_anime/",
+    "h_video_place": "~/Downloads/Downloaded/h_video/",
+    "h_pic_place": "~/Downloads/Downloaded/h_pic/",
+    "anime_place": "~/Downloads/Downloaded/anime/",
+
+    "urls_place": "~/Downloads/Downloaded/URLlist.txt",
+    "miss_place": "~/Downloads/Downloaded/misslog.txt",
+
+    "sample_html": "~/Documents/Tools/"
+}
