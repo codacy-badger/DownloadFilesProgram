@@ -4,6 +4,7 @@
 
 import os
 import re
+import sys
 import httplib
 import urlparse
 from BeautifulSoup import BeautifulSoup
@@ -11,7 +12,8 @@ from BeautifulSoup import BeautifulSoup
 from AccessSite.OpenHTML import AccessPage
 import tiwi_kiwi
 
-
+reload(sys)
+sys.setdefaultencoding('utf-8')
 SeqFlag = True
 
 
@@ -83,14 +85,22 @@ class Media(object):
             raise
 
     def getFileURL(self, soup):
-        shortURL = soup.article.find(
-            "a", attrs={"class": "btn btn-1 btn-1e"}
-        )["href"]
-        url = self.expandShortenURL(shortURL)
-        url = AccessPage(url).html.url
-        if 'tiwi.kiwi' in url:
-            url = self.getURL_fromTiwikiwi(url)
+        self.checkDL = False
+        url = ''
+        if not self.checkDL:
+            url = self.getURL_fromDirectly(soup)
+        if not self.checkDL:
+            url = self.getURL_fromTIWIKIWI(soup)
         return url
+
+    def getURL_fromDirectly(self, soup):
+        try:
+            a_s = soup.findAll("a", attrs={"class": "btn btn-1 btn-1e"})
+            url = a_s[0]['href'].encode("utf8")
+            self.checkDL = True
+            return url
+        except:
+            self.checkDL = False
 
     def expandShortenURL(self, surl):
         parsed = urlparse.urlparse(surl)
@@ -103,13 +113,22 @@ class Media(object):
             return surl
 
     def getURL_fromTiwikiwi(self, url):
-        originurl = url
-        url = url.replace('http://', '')
-        urlArray = url.split('/')
-        site = tiwi_kiwi.run(originurl, urlArray)
-        fileURL = site.urls[0]['href'].encode("utf8")
-        self.checkDL = True
-        return fileURL
+        try:
+            shortURL = soup.article.find(
+                "a", attrs={"class": "btn btn-1 btn-1e"}
+            )["href"]
+            url = self.expandShortenURL(shortURL)
+            url = AccessPage(url).html.url
+            if 'tiwi.kiwi' in url:
+                originurl = url
+                url = url.replace('http://', '')
+                urlArray = url.split('/')
+                site = tiwi_kiwi.run(originurl, urlArray)
+                fileURL = site.urls[0]['href'].encode("utf8")
+                self.checkDL = True
+                return fileURL
+        except:
+            self.checkDL = False
 
 
 # === List Download ===

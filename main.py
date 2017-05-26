@@ -51,6 +51,7 @@ class Download(object):
             #     _progress
             # )
             # with urllib2
+            print url
             DownloadFile(
                 url,
                 path

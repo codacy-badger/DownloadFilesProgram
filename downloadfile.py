@@ -76,7 +76,7 @@ class DownloadFile(object):
             # user_agent = 'Wget/1.9.1'
             req = urllib2.Request(str(url))
             req.add_header("User-agent", user_agent)
-            response = urllib2.urlopen(req, timeout=180)
+            response = urllib2.urlopen(req, timeout=3)
             data = self.chunk_read(
                 response,
                 report_hook=chunk_report)

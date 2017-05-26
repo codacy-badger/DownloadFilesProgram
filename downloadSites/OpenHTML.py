@@ -15,23 +15,23 @@ class AccessPage(object):
     def __init__(self, url):
         super(AccessPage, self).__init__()
         self.html = ''
-        self.html = self.getHTML_byPhantomjs(url)
+        self.html, self.driver = self.getHTML(url)
+
+    # def getHTML(self, url):
+    #     if 'SEQUENCE' in url:
+    #         return ''
+    #     try:
+    #         # set user
+    #         user_agent = 'Mozilla/5.0'
+    #         # user_agent = 'Chrome/41.0.2228.0'
+    #         req = urllib2.Request(url)
+    #         req.add_header("User-agent", user_agent)
+    #         # access page
+    #         return urllib2.urlopen(req)
+    #     except:
+    #         raise
 
     def getHTML(self, url):
-        if 'SEQUENCE' in url:
-            return ''
-        try:
-            # set user
-            user_agent = 'Mozilla/5.0'
-            # user_agent = 'Chrome/41.0.2228.0'
-            req = urllib2.Request(url)
-            req.add_header("User-agent", user_agent)
-            # access page
-            return urllib2.urlopen(req)
-        except:
-            raise
-
-    def getHTML_byPhantomjs(self, url):
         if 'SEQUENCE' in url:
             return ''
 
@@ -41,7 +41,7 @@ class AccessPage(object):
         driver.get(url)
         html = driver.page_source.encode('utf-8')
         # access page
-        return html
+        return html, driver
 
 
 

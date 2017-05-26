@@ -1,0 +1,12 @@
+[INFO  - 2017-05-26T21:45:50.186Z] GhostDriver - Main - running on port 52415
+[INFO  - 2017-05-26T21:45:51.073Z] Session [afb971c0-425c-11e7-b83f-49ca7db4f193] - page.settings - {"XSSAuditingEnabled":false,"javascriptCanCloseWindows":true,"javascriptCanOpenWindows":true,"javascriptEnabled":true,"loadImages":true,"localToRemoteUrlAccessEnabled":false,"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1","webSecurityEnabled":true}
+[INFO  - 2017-05-26T21:45:51.073Z] Session [afb971c0-425c-11e7-b83f-49ca7db4f193] - page.customHeaders:  - {}
+[INFO  - 2017-05-26T21:45:51.073Z] Session [afb971c0-425c-11e7-b83f-49ca7db4f193] - Session.negotiatedCapabilities - {"browserName":"phantomjs","version":"2.1.1","driverName":"ghostdriver","driverVersion":"1.2.0","platform":"mac-unknown-64bit","javascriptEnabled":true,"takesScreenshot":true,"handlesAlerts":false,"databaseEnabled":false,"locationContextEnabled":false,"applicationCacheEnabled":false,"browserConnectionEnabled":false,"cssSelectorsEnabled":true,"webStorageEnabled":false,"rotatable":false,"acceptSslCerts":false,"nativeEvents":true,"proxy":{"proxyType":"direct"}}
+[INFO  - 2017-05-26T21:45:51.073Z] SessionManagerReqHand - _postNewSessionCommand - New Session Created: afb971c0-425c-11e7-b83f-49ca7db4f193
+[ERROR - 2017-05-26T21:46:02.734Z] Session [afb971c0-425c-11e7-b83f-49ca7db4f193] - page.onError - msg: VIDEOJS: ERROR: (CODE:4 MEDIA_ERR_SRC_NOT_SUPPORTED) No compatible source was found for this media. [object Object]
+
+  phantomjs://platform/console++.js:263 in error
+[ERROR - 2017-05-26T21:46:02.735Z] Session [afb971c0-425c-11e7-b83f-49ca7db4f193] - page.onError - stack:
+  e (https://stream.moe/plugins/mediaplayer/assets/players/videojs/video.min.js:21)
+
+  phantomjs://platform/console++.js:263 in error
