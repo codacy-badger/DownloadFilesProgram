@@ -216,7 +216,7 @@ class Sequence(object):
             timeStr = x.string[1:]
             timeStr = timeStr.replace(' ', '')
             timeStr = timeStr.replace('/', '').replace(':', '')
-            times += [int(timeStr)]
+            times.append(int(timeStr))
         return min(times)
 
 

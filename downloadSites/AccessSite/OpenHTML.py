@@ -15,7 +15,7 @@ class AccessPage(object):
     def __init__(self, url):
         super(AccessPage, self).__init__()
         self.html = ''
-        self.html = self.getHTML_byPhantomjs(url)
+        self.html = self.getHTML(url)
 
     def getHTML(self, url):
         if 'SEQUENCE' in url:
@@ -42,8 +42,6 @@ class AccessPage(object):
         html = driver.page_source.encode('utf-8')
         # access page
         return html
-
-
 
 
 class SoupURL(object):
