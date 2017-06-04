@@ -12,26 +12,29 @@ from BeautifulSoup import BeautifulSoup
 
 class AccessPage(object):
     """docstring for AccessPage"""
-    def __init__(self, url):
+    def __init__(self, url, browser=False):
         super(AccessPage, self).__init__()
         self.html = ''
-        self.html, self.driver = self.getHTML(url)
-
-    # def getHTML(self, url):
-    #     if 'SEQUENCE' in url:
-    #         return ''
-    #     try:
-    #         # set user
-    #         user_agent = 'Mozilla/5.0'
-    #         # user_agent = 'Chrome/41.0.2228.0'
-    #         req = urllib2.Request(url)
-    #         req.add_header("User-agent", user_agent)
-    #         # access page
-    #         return urllib2.urlopen(req)
-    #     except:
-    #         raise
+        if browser:
+            self.html, self.driver = self.getHTML_byBrowser(url)
+        else:
+            self.html = self.getHTML(url)
 
     def getHTML(self, url):
+        if 'SEQUENCE' in url:
+            return ''
+        try:
+            # set user
+            user_agent = 'Mozilla/5.0'
+            # user_agent = 'Chrome/41.0.2228.0'
+            req = urllib2.Request(url)
+            req.add_header("User-agent", user_agent)
+            # access page
+            return urllib2.urlopen(req)
+        except:
+            raise
+
+    def getHTML_byBrowser(self, url):
         if 'SEQUENCE' in url:
             return ''
 

@@ -55,7 +55,7 @@ class DataHTML(object):
     """docstring for DataHTML"""
     def __init__(self, url):
         super(DataHTML, self).__init__()
-        x = AccessPage(url)
+        x = AccessPage(url, browser=True)
         self.soup = self.getSoup(x)
         self.driver = self.getDriver(x)
 
@@ -163,15 +163,15 @@ class Media(object):
 # === List Download ===
 class Index(object):
     """docstring for Index"""
-    def __init__(self, soup):
+    def __init__(self, data):
         super(Index, self).__init__()
         self.pref = []
-        urls = self.getMediaURL(soup)
+        urls = self.getMediaURL(data.soup)
         for x in urls:
             try:
                 l = {}
-                soup = DataHTML(x).s
-                m = Media(soup)
+                data = DataHTML(x)
+                m = Media(data)
                 l['title'] = m.pref[0]['title']
                 l['href'] = m.pref[0]['href'].encode("utf8")
                 self.pref += [l]
