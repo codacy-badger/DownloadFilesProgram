@@ -17,6 +17,7 @@ import muchaero_net
 import nijibondo_com
 import nizigazo_net
 import okkisokuho_com
+import Pornhub_com
 
 
 class DownloadList(object):
@@ -70,6 +71,9 @@ class DownloadList(object):
         elif urlArray[0] == 'okkisokuho.com':
             print 'okkisokuho'
             fileStatus = okkisokuho_com.run(url, urlArray, limit).filestatus
+        elif urlArray[0] == 'www.pornhub.com' or urlArray[0] == 'jp.pornhub.com':
+            print 'pornhub'
+            fileStatus = Pornhub_com.run(url, urlArray).filestatus
         return fileStatus
 
     def splitURL(self, url):

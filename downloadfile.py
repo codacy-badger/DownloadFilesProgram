@@ -76,7 +76,7 @@ class DownloadFile(object):
             # user_agent = 'Wget/1.9.1'
             req = urllib2.Request(str(url))
             req.add_header("User-agent", user_agent)
-            response = urllib2.urlopen(req, timeout=3)
+            response = urllib2.urlopen(req, timeout=5)
             data = self.chunk_read(
                 response,
                 report_hook=chunk_report)
@@ -88,6 +88,8 @@ class DownloadFile(object):
             print "HTTP Error:", e.code, url
             if not (self.loopcnt > 3):
                 self.dlfile(url, filename)
+            else:
+                raise
         except urllib2.URLError, e:
             print "URL Error:", e.reason, url
             self.dlfile(url, filename)
