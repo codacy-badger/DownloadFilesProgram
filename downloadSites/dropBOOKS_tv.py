@@ -57,6 +57,7 @@ class SiteType(object):
                 if SeqFlag:
                     SeqFlag = False
                     urlType = 'sequence'   # search result
+                    print 'ok'
                 else:
                     urlType = 'index'
         else:
@@ -96,7 +97,7 @@ class Media(object):
 
     def getFileURL(self, soup):
         try:
-            topUrl = "http://dropbooks.tv"
+            topUrl = "http://dlbooks.to"
             fileURL = (
                 topUrl
                 +
@@ -138,7 +139,7 @@ class Index(object):
         fix = []
         for i in x:
             url = (
-                'http://dropbooks.tv/detail/download_zip/' +
+                'http://dlbooks.to/detail/download_zip/' +
                 i['href'].split('/')[-1]
             )
             fix += [{
@@ -221,7 +222,7 @@ class Sequence(object):
 
 
 # === test code ===
-# url = 'http://dropbooks.tv/tops/index/term:no/page:1'
+# url = 'http://dlbooks.to/tops/index/term:no/page:1'
 
 # url = url.replace('https', 'http')
 # aurl = url.replace('http://', '')

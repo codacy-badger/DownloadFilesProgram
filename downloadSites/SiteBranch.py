@@ -28,7 +28,7 @@ class DownloadList(object):
 
     def getFileStatus(self, url, limit=None):
         urlArray = self.splitURL(url)
-        if urlArray[0] == 'dropbooks.tv':
+        if urlArray[0] == 'dlbooks.to':
             print 'dropbooks'
             fileStatus = dropBOOKS_tv.run(url, urlArray, limit).filestatus
         elif urlArray[0] == 'www.xvideos.com':
