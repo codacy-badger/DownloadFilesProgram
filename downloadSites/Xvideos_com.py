@@ -78,9 +78,9 @@ class Media(object):
         try:
             js = soup.find('div', attrs={'id': 'video-player-bg'})
             scr = js.findAll('script')
-            scrStr = scr[4].string.replace('\\', '')
+            scrStr = scr[5].string.replace('\\', '')
 
-            pattern = re.compile(("(http:\/\/.+\.mp4.+)'"))
+            pattern = re.compile((r"(https:\/\/.+\.mp4.+)'"))
             m = pattern.findall(scrStr)
             media_url = m[-1]
             return media_url
@@ -89,14 +89,14 @@ class Media(object):
 
 
 # === test code ===
-# url = 'http://www.xvideos.com/video16210343/_~_~'
+# url = 'https://www.xvideos.com/video31249247/asian_fucked'
 
 # url = url.replace('https', 'http')
 # aurl = url.replace('http://', '')
 # urlArray = aurl.split('/')
 
 # x = run(url, urlArray)
-# for media in x.urls:
+# for media in x.filestatus['urls']:
 #     print media['title']
 #     print media['href']
 #     print ''
