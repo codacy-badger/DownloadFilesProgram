@@ -58,5 +58,5 @@ class SoupURL(object):
     def getSoup(self, url):
         # print url
         x = AccessPage(url)
-        soup = BeautifulSoup(x.html)
+        soup = BeautifulSoup(x.content, 'html.parser')
         return soup

@@ -6,6 +6,7 @@ import os
 import sys
 import re
 import time
+import HTMLParser
 
 from BeautifulSoup import BeautifulSoup
 
@@ -88,6 +89,7 @@ class Media(object):
             pattern = r"html5player\.setVideoUrl.+(http.+)'\);" # ()で囲まれた部分だけ返す
             m = re.findall(pattern, scrStr)
             url = m[-1] # get only high quarity video url
+            url = HTMLParser.HTMLParser().unescape(url)    # fix encoding bug
             return url
         except:
             raise
