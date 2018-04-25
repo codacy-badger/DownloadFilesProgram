@@ -79,25 +79,29 @@ class Media(object):
         try:
             js = soup.find('div', attrs={'id': 'video-player-bg'})
             scr = js.findAll('script')
-            scrStr = scr[5].string.replace('\\', '')
+            scrStr = ''
+            scr = [str(i.string) for i in scr]
+            scr = '\n'.join(scr)
+            scrStr = scr.replace('\\', '')
 
-            pattern = re.compile((r"(https:\/\/.+\.mp4.+)'"))
-            m = pattern.findall(scrStr)
-            media_url = m[-1]
-            return media_url
+            # get functions for video url
+            pattern = r"html5player\.setVideoUrl.+(http.+)'\);" # ()で囲まれた部分だけ返す
+            m = re.findall(pattern, scrStr)
+            url = m[-1] # get only high quarity video url
+            return url
         except:
             raise
 
 
 # === test code ===
-url = 'https://www.xnxx.com/video-elxqt9f/shocking_video_from_the_plane'
+# url = 'https://www.xnxx.com/video-elxqt9f/shocking_video_from_the_plane'
 
-url = url.replace('https', 'http')
-aurl = url.replace('http://', '')
-urlArray = aurl.split('/')
+# url = url.replace('https', 'http')
+# aurl = url.replace('http://', '')
+# urlArray = aurl.split('/')
 
-x = run(url, urlArray)
-for media in x.filestatus['urls']:
-    print media['title']
-    print media['href']
-    print ''
+# x = run(url, urlArray)
+# for media in x.filestatus['urls']:
+#     print media['title']
+#     print media['href']
+#     print ''
