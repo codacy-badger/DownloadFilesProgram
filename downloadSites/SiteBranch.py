@@ -5,6 +5,7 @@
 
 import dropBOOKS_tv
 import Xvideos_com
+import xnxx_com
 import AnimeHaven_org
 import wakusoku
 import Xhamster_com
@@ -34,6 +35,9 @@ class DownloadList(object):
         elif urlArray[0] == 'www.xvideos.com':
             print 'xvideos'
             fileStatus = Xvideos_com.run(url, urlArray).filestatus
+        elif urlArray[0] == 'www.xnxx.com':
+            print 'xnxx'
+            fileStatus = xnxx_com.run(url, urlArray).filestatus
         elif urlArray[0] == 'animehaven.org' or urlArray[0] == 'animehaven.to':
             print 'animehaven'
             fileStatus = AnimeHaven_org.run(url, urlArray).filestatus
