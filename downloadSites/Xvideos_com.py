@@ -5,6 +5,7 @@
 import os
 import re
 import time
+import HTMLParser
 
 from BeautifulSoup import BeautifulSoup
 
@@ -78,18 +79,23 @@ class Media(object):
         try:
             js = soup.find('div', attrs={'id': 'video-player-bg'})
             scr = js.findAll('script')
-            scrStr = scr[5].string.replace('\\', '')
+            scrStr = ''
+            scr = [str(i.string) for i in scr]
+            scr = '\n'.join(scr)
+            scrStr = scr.replace('\\', '')
 
-            pattern = re.compile((r"(https:\/\/.+\.mp4.+)'"))
-            m = pattern.findall(scrStr)
-            media_url = m[-1]
-            return media_url
+            # get functions for video url
+            pattern = r"html5player\.setVideoUrl.+(http.+)'\);" # ()で囲まれた部分だけ返す
+            m = re.findall(pattern, scrStr)
+            url = m[-1] # get only high quarity video url
+            url = HTMLParser.HTMLParser().unescape(url)    # fix encoding bug
+            return url
         except:
             raise
 
 
 # === test code ===
-# url = 'https://www.xvideos.com/video31249247/asian_fucked'
+# url = 'https://www.xvideos.com/video14042415/teen_can_t_wait_gets_off_in_public_bathroom'
 
 # url = url.replace('https', 'http')
 # aurl = url.replace('http://', '')
