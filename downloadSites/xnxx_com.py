@@ -3,6 +3,7 @@
 # -*- coding: cp932 -*-
 
 import os
+import sys
 import re
 import time
 
@@ -67,8 +68,8 @@ class Media(object):
 
     def getTitle(self, soup):
         title_str = soup.title.string
-        title = title_str.split("- XVIDEOS")[0].split("(")[0].strip()
-        title = re.sub(r'[^(\w\d\-\[\])]', '', title)
+        title = title_str.split(" - XNXX")[0].split("(")[0].strip()
+        title = re.sub(r'[^(\w\d\-\[\])]', '_', title)
         if len(title) == 0:
             title = 'ut' + str(int(time.time()))
         title = title + '.mp4'
@@ -89,14 +90,14 @@ class Media(object):
 
 
 # === test code ===
-# url = 'https://www.xvideos.com/video31249247/asian_fucked'
+url = 'https://www.xnxx.com/video-elxqt9f/shocking_video_from_the_plane'
 
-# url = url.replace('https', 'http')
-# aurl = url.replace('http://', '')
-# urlArray = aurl.split('/')
+url = url.replace('https', 'http')
+aurl = url.replace('http://', '')
+urlArray = aurl.split('/')
 
-# x = run(url, urlArray)
-# for media in x.filestatus['urls']:
-#     print media['title']
-#     print media['href']
-#     print ''
+x = run(url, urlArray)
+for media in x.filestatus['urls']:
+    print media['title']
+    print media['href']
+    print ''
