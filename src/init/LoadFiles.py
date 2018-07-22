@@ -1,22 +1,22 @@
 # -*- coding: utf-8 -*-
+import json
 import os
 import sys
-import json
 
 
 # load setting.json
 class LoadSetting(object):
     """docstring for LoadSetting"""
-    def __init__(self, jsonFile):
+    def __init__(self, json_file):
         super(LoadSetting, self).__init__()
-        self.setting = self.load(jsonFile)
+        self.setting = self.load(json_file)
 
-    def load(self, jsonFile):
+    def load(self, json_file):
         # fix path
-        jsonFile = os.path.expanduser(jsonFile)
+        json_file = os.path.expanduser(json_file)
         # open json file
         try:
-            with open(jsonFile, 'r') as f:
+            with open(json_file, 'r') as f:
                 x = json.load(f)
         except:
             print("設定ファイルが開けません")

@@ -1,16 +1,19 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import argparse
+import glob
 import os
 import sys
-import glob
-import argparse
+
+from downloadSites.SiteBranch import DownloadList
 
 from downloadfile import DownloadFile
+
 from fileLog.codec import Codec
-from init.Init import INIT
 from fileLog.main import URLlog
-from downloadSites.SiteBranch import DownloadList
+
+from init.Init import INIT
 
 
 parser = argparse.ArgumentParser(description='')
@@ -29,11 +32,11 @@ class Download(object):
         def _progress(block_count, block_size, total_size):
             percentage = 100.0 * block_count * block_size / total_size
             sys.stdout.write(
-                "%.2f %% (%d KB)\r" % (percentage, total_size/1024)
+                "%.2f %% (%d KB)\r" % (percentage, total_size / 1024)
             )
         # --------------------------
         path = os.path.expanduser(path)
-        self.checkDir(path)
+        self.check_dir(path)
 
         url = Codec().to_utf8(url)
         path = Codec().to_utf8(path)
@@ -49,7 +52,6 @@ class Download(object):
             #     path,
             #     _progress
             # )
-            # with urllib
             print(url)
             DownloadFile(url, path)
         except:
@@ -57,7 +59,7 @@ class Download(object):
         else:
             URLlog(logdir, url).checkLog(addURL=True)
 
-    def checkDir(self, path):
+    def check_dir(self, path):
         array = path.split('/')
         last = array[-1]
         if '.' in last:
@@ -85,7 +87,7 @@ class LetsDownload(object):
             else:
                 print('Finish Download!!\n')
 
-    def getDirectory(self, title, **setting):
+    def get_dir(self, title, **setting):
         ex = title[-4:]
         if ex == '.zip':
             return setting['zip_place']
@@ -105,14 +107,14 @@ def main():
     print("")
 
     # get place of URL list file
-    setPlace = '../setting.json'
+    set_place = '../setting.json'
     while True:
         try:
-            setting = INIT(setPlace)
+            setting = INIT(set_place)
             break
         except:
-            setPlace = raw_input("Where setting.json? : ")
-            setPlace = os.path.expanduser(setPlace)
+            set_place = raw_input("Where setting.json? : ")
+            set_place = os.path.expanduser(set_place)
 
     # get urls
     with open(setting.pref['urls_place'], 'r') as f:

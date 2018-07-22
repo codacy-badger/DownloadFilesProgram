@@ -1,10 +1,7 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
-# -*- coding: cp932 -*-
-
+import datetime
 import os
 import re
-import datetime
 
 from .AccessSite.OpenHTML import SoupURL
 
@@ -13,58 +10,58 @@ SeqFlag = True
 LimitTime = None
 
 
-class run(object):
-    """docstring for run"""
-    def __init__(self, url, urlArray, limit=None):
-        super(run, self).__init__()
+class Run(object):
+    """docstring for Run"""
+    def __init__(self, url, url_array, limit=None):
+        super(Run, self).__init__()
         self.urls = []
         global LimitTime
         LimitTime = limit
         # get type and soup
-        st = SiteType(urlArray)
+        st = SiteType(url_array)
         soup = SoupURL(url)
-        urls = self.getUrls(st.type, soup.s, urlArray)
-        self.filestatus = {'urls': urls, 'dir': 'h_pic_place'}
+        urls = self.get_urls(st.type, soup.s, url_array)
+        self.file_status = {'urls': urls, 'dir': 'h_pic_place'}
 
-    def getUrls(self, urlType, soup, urlArray):
-        if urlType == 'media':
-            listUrl = Media(soup).pref
-        elif urlType == 'index':
-            listUrl = Index(soup).pref
-        elif urlType == 'sequence':
-            listUrl = Sequence(soup, urlArray).pref
+    def get_urls(self, url_type, soup, url_array):
+        if url_type == 'media':
+            list_url = Media(soup).pref
+        elif url_type == 'index':
+            list_url = Index(soup).pref
+        elif url_type == 'sequence':
+            list_url = Sequence(soup, url_array).pref
         else:
-            listUrl = []
-        return listUrl
+            list_url = []
+        return list_url
 
 
 class SiteType(object):
     """docstring for SiteType"""
-    def __init__(self, urlArray):
+    def __init__(self, url_array):
         super(SiteType, self).__init__()
-        self.type = self.getType(urlArray)
+        self.type = self.get_type(url_array)
 
-    def getType(self, urlArray):
+    def get_type(self, url_array):
         global SeqFlag
-        if 'post' in urlArray[-2]:
-            urlType = 'media'   # media url
-        elif urlArray[-1] == 'SEQUENCE':
+        if 'post' in url_array[-2]:
+            url_type = 'media'   # media url
+        elif url_array[-1] == 'SEQUENCE':
             if SeqFlag:
                 SeqFlag = False
-                urlType = 'sequence'   # search result
+                url_type = 'sequence'   # search result
             else:
-                urlType = 'index'
-        return urlType
+                url_type = 'index'
+        return url_type
 
 
 class Media(object):
     """docstring for Media"""
     def __init__(self, soup):
         super(Media, self).__init__()
-        self.parent = self.getFolderName(soup)
-        self.pref = self.getMediaURL(soup)
+        self.parent = self.get_dir_name(soup)
+        self.pref = self.get_media_url(soup)
 
-    def getFolderName(self, soup):
+    def get_dir_name(self, soup):
         try:
             title = soup.title.string.split('|')[0].strip()
             title = title.replace('/', '_')
@@ -72,7 +69,7 @@ class Media(object):
         except:
             raise
 
-    def getMediaURL(self, soup):
+    def get_media_url(self, soup):
         try:
             div_tags = soup.find('div', attrs={'class': 'entry_text'})
             img_tags = div_tags.findAll('img', attrs={'alt': u'エロ画像'})
@@ -96,10 +93,10 @@ class Index(object):
     """docstring for Index"""
     def __init__(self, soup):
         super(Index, self).__init__()
-        url_list = self.getMediaURL(soup)
-        self.pref = self.getPref(url_list)
+        url_list = self.get_media_url(soup)
+        self.pref = self.get_pref(url_list)
 
-    def getPref(self, url_list):
+    def get_pref(self, url_list):
         buf = []
         for x in url_list:
             soup = SoupURL(x['href']).s
@@ -110,7 +107,7 @@ class Index(object):
                 pass
         return buf
 
-    def getMediaURL(self, soup):
+    def get_media_url(self, soup):
         div_tags = soup.findAll('div', attrs={'class': 'entry_box'})
         # get title and url
         x = []
@@ -126,54 +123,54 @@ class Index(object):
 
 class Sequence(object):
     """docstring for Sequence"""
-    def __init__(self, soup, urlArray):
+    def __init__(self, soup, url_array):
         super(Sequence, self).__init__()
         # init
         global SeqFlag
-        stopTime = self.getLimit()
+        stop_time = self.get_limit()
         i = 1
         self.pref = []
         # view time now
         d = datetime.datetime.today()
         print('--- Donwload Sequence おっき速報 ---')
-        print('http://' + '/'.join(urlArray))
+        print('http://' + '/'.join(url_array))
         print('Start Time is {}/{}/{} {}:{}'.format(
             d.year, d.month, d.day, d.hour, d.minute
         ))
         # start analy
-        del urlArray[-1]
+        del url_array[-1]
         while True:
             print('Scaning page:' + str(i) + '...')
-            url = 'http://' + '/'.join(urlArray) + '/' + str(i)
+            url = 'http://' + '/'.join(url_array) + '/' + str(i)
             soup = SoupURL(url).s
             self.pref += Index(soup).pref
             i += 1
-            if self.getFilesDay(soup) < stopTime:
+            if self.get_files_day(soup) < stop_time:
                 break
         # Finish
         SeqFlag = True
         print("")
 
-    def getLimit(self):
+    def get_limit(self):
         global LimitTime
         # check LimitTime
-        limitDay = LimitTime
-        if limitDay is None:
+        limit_day = LimitTime
+        if limit_day is None:
             print('Till when?')
             print('ex. YYYY/MM/DD hh:mm')
-            limitDay = raw_input('-> ')
+            limit_day = raw_input('-> ')
         # check Str Type
         while True:
-            LimitTime = limitDay
-            limitDay = limitDay.replace(' ', '')
-            limitDay = limitDay.replace('/', '').replace(':', '')
-            if len(limitDay) == 12:
-                return int(limitDay)
+            LimitTime = limit_day
+            limit_day = limit_day.replace(' ', '')
+            limit_day = limit_day.replace('/', '').replace(':', '')
+            if len(limit_day) == 12:
+                return int(limit_day)
             else:
                 print('Oops!')
-                limitDay = raw_input('-> ')
+                limit_day = raw_input('-> ')
 
-    def getFilesDay(self, soup):
+    def get_files_day(self, soup):
         div_tags = soup.findAll('div', attrs={'class': 'entry_date'})
         times = []
         # get times
@@ -196,10 +193,10 @@ class Sequence(object):
 
 # url = url.replace('https', 'http')
 # aurl = url.replace('http://', '')
-# urlArray = aurl.split('/')
+# url_array = aurl.split('/')
 
-# x = run(url, urlArray)
-# for media in x.filestatus['urls']:
+# x = Run(url, url_array)
+# for media in x.file_status['urls']:
 #     print(media['title'])
 #     print(media['href'])
 #     print('')

@@ -1,54 +1,50 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
-# -*- coding: cp932 -*-
-
-import os
 import re
+
 from bs4 import BeautifulSoup
 
-from .OpenHTML import AccessPage
 from . import tiwi_kiwi
-from . import STREAMMOE
+from .OpenHTML import AccessPage
 
 
 SeqFlag = True
 
 
-class run(object):
-    """docstring for run"""
-    def __init__(self, url, urlArray):
-        super(run, self).__init__()
+class Run(object):
+    """docstring for Run"""
+    def __init__(self, url, url_array):
+        super(Run, self).__init__()
         self.urls = []
         # get type and data
-        st = SiteType(urlArray)
+        st = SiteType(url_array)
         data = DataHTML(url)
-        urls = self.getUrls(st.type, data)
-        self.filestatus = {'urls': urls, 'dir': 'anime_place'}
+        urls = self.get_urls(st.type, data)
+        self.file_status = {'urls': urls, 'dir': 'anime_place'}
 
-    def getUrls(self, urlType, data):
-        if urlType == 'media':
-            listUrl = Media(data).pref
-        elif urlType == 'index':
-            listUrl = Index(data).pref
+    def get_urls(self, url_type, data):
+        if url_type == 'media':
+            list_url = Media(data).pref
+        elif url_type == 'index':
+            list_url = Index(data).pref
         else:
-            listUrl = []
-        return listUrl
+            list_url = []
+        return list_url
 
 
 class SiteType(object):
     """docstring for SiteType"""
-    def __init__(self, urlArray):
+    def __init__(self, url_array):
         super(SiteType, self).__init__()
-        self.type = self.getType(urlArray)
+        self.type = self.get_type(url_array)
 
-    def getType(self, urlArray):
-        if urlArray[1] == 'subbed' or urlArray[1] == 'dubbed':
-            urlType = 'media'
-        elif urlArray[1] == 'episodes':
-            urlType = 'index'
+    def get_type(self, url_array):
+        if url_array[1] == 'subbed' or url_array[1] == 'dubbed':
+            url_type = 'media'
+        elif url_array[1] == 'episodes':
+            url_type = 'index'
         else:
-            urlType = None
-        return urlType
+            url_type = None
+        return url_type
 
 
 class DataHTML(object):
@@ -56,14 +52,14 @@ class DataHTML(object):
     def __init__(self, url):
         super(DataHTML, self).__init__()
         x = AccessPage(url, browser=True)
-        self.soup = self.getSoup(x)
-        self.driver = self.getDriver(x)
+        self.soup = self.get_soup(x)
+        self.driver = self.get_driver(x)
 
-    def getSoup(self, x):
+    def get_soup(self, x):
         soup = BeautifulSoup(x.html)
         return soup
 
-    def getDriver(self, x):
+    def get_driver(self, x):
         driver = x.driver
         return driver
 
@@ -74,12 +70,12 @@ class Media(object):
     def __init__(self, data):
         super(Media, self).__init__()
         x = {}
-        x['title'] = self.getTitle(data.soup)
+        x['title'] = self.get_title(data.soup)
         # get download link
-        x['href'] = self.getFileURL(data)
+        x['href'] = self.get_file_url(data)
         self.pref = [x]
 
-    def getTitle(self, soup):
+    def get_title(self, soup):
         try:
             title = soup.title.string.split("|")[0].strip()
             title = re.sub(r'[/]', '_', title) + '.mp4'
@@ -88,40 +84,39 @@ class Media(object):
         except:
             raise
 
-    def getFileURL(self, data):
+    def get_file_url(self, data):
         self.checkDL = False
         soup = data.soup
-        driver = data.driver
         url = ''
         if not self.checkDL:
-            url = self.getURL_fromSTREAMMOE(data)
+            url = self.get_url_from_streammoe(data)
         if not self.checkDL:
-            url = self.getURL_fromDownloadLink(soup)
+            url = self.get_url_fromdownload_link(soup)
         if not self.checkDL:
-            url = self.getURL_fromDirectly(soup)
+            url = self.get_url_from_dir(soup)
         if not self.checkDL:
-            url = self.getURL_fromTIWIKIWI(soup)
+            url = self.get_url_from_tiwikiwi(soup)
         return url
 
-    def getURL_fromTIWIKIWI(self, soup):
+    def get_url_from_tiwikiwi(self, soup):
         try:
-            downloadLink = soup.find(
+            download_link = soup.find(
                 'div',
                 attrs={'class': 'download_feed_link'}
             ).a['href']
-            if 'google' in downloadLink:
+            if 'google' in download_link:
                 self.checkDL = True
-                return downloadLink
-            url = downloadLink.replace('http://', '')
-            urlArray = url.split('/')
-            site = tiwi_kiwi.run(downloadLink, urlArray)
-            fileURL = site.urls[0]['href'].encode("utf8")
+                return download_link
+            url = download_link.replace('http://', '')
+            url_array = url.split('/')
+            site = tiwi_kiwi.Run(download_link, url_array)
+            file_url = site.urls[0]['href'].encode("utf8")
             self.checkDL = True
-            return fileURL
+            return file_url
         except:
             self.checkDL = False
 
-    def getURL_fromSTREAMMOE(self, data):
+    def get_url_from_streammoe(self, data):
         driver = data.driver
         try:
             iframes = driver.find_elements_by_tag_name('iframe')
@@ -132,30 +127,30 @@ class Media(object):
             html = driver.page_source.encode('utf-8')
             soup = BeautifulSoup(html)
             video = soup.find('video')
-            fileURL = video.source['src']
+            file_url = video.source['src']
 
             self.checkDL = True
-            return fileURL
+            return file_url
         except:
             self.checkDL = False
 
-    def getURL_fromDownloadLink(self, soup):
+    def get_url_fromdownload_link(self, soup):
         try:
             a_s = soup.findAll('a', attrs={'class': 'download-btn-inline'})
-            fileURL = sources[0]['href'].encode("utf8")
+            file_url = a_s[0]['href'].encode("utf8")
             self.checkDL = True
-            return fileURL
+            return file_url
         except:
             self.checkDL = False
 
-    def getURL_fromDirectly(self, soup):
+    def get_url_from_dir(self, soup):
         try:
             video = soup.find('video')
             sources = video.findAll('source')
 
-            fileURL = sources[0]['src'].encode("utf8")
+            file_url = sources[0]['src'].encode("utf8")
             self.checkDL = True
-            return fileURL
+            return file_url
         except:
             self.checkDL = False
 
@@ -166,7 +161,7 @@ class Index(object):
     def __init__(self, data):
         super(Index, self).__init__()
         self.pref = []
-        urls = self.getMediaURL(data.soup)
+        urls = self.get_media_url(data.soup)
         for x in urls:
             try:
                 l = {}
@@ -180,7 +175,7 @@ class Index(object):
             else:
                 print(x)
 
-    def getMediaURL(self, soup):
+    def get_media_url(self, soup):
         tag_h2 = soup.findAll('h2', attrs={'class': 'entry-title'})
         media_url = []
         for x in tag_h2:
@@ -193,9 +188,9 @@ class Index(object):
 
 # url = url.replace('https', 'http')
 # aurl = url.replace('http://', '')
-# urlArray = aurl.split('/')
+# url_array = aurl.split('/')
 
-# x = run(url, urlArray)
+# x = Run(url, url_array)
 # for media in x.urls:
 #     print(media['title'])
 #     print(media['href'])

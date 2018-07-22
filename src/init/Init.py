@@ -10,16 +10,16 @@ class INIT(object):
         # value
         self.pref = None
         # get value
-        self.getSetting(setting)
-        self.checkDirs(self.pref)
+        self.get_setting(setting)
+        self.check_dirs(self.pref)
 
-    def getSetting(self, setting):
+    def get_setting(self, setting):
         self.pref = LoadFiles.LoadSetting(setting).setting
 
-    def checkDirs(self, mixDict):
+    def check_dirs(self, mix_dict):
         # get dirs
         dirs = []
-        for k, v in mixDict.items():
+        for k, v in mix_dict.items():
             if v[-1] == '/':
                 dirs += [v]
         # check dirs

@@ -1,13 +1,9 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
-# -*- coding: cp932 -*-
-
-import os
-import sys
-import json
-from selenium import webdriver
 import urllib
+
 from bs4 import BeautifulSoup
+
+from selenium import webdriver
 
 
 class AccessPage(object):
@@ -16,11 +12,11 @@ class AccessPage(object):
         super(AccessPage, self).__init__()
         self.html = ''
         if browser:
-            self.html, self.driver = self.getHTML_byBrowser(url)
+            self.html, self.driver = self.get_html_by_browser(url)
         else:
-            self.html = self.getHTML(url)
+            self.html = self.get_html(url)
 
-    def getHTML(self, url):
+    def get_html(self, url):
         if 'SEQUENCE' in url:
             return ''
         try:
@@ -34,7 +30,7 @@ class AccessPage(object):
         except:
             raise
 
-    def getHTML_byBrowser(self, url):
+    def get_html_by_browser(self, url):
         if 'SEQUENCE' in url:
             return ''
 
@@ -47,15 +43,13 @@ class AccessPage(object):
         return html, driver
 
 
-
-
 class SoupURL(object):
     """docstring for SoupURL"""
     def __init__(self, url):
         super(SoupURL, self).__init__()
-        self.s = self.getSoup(url)
+        self.s = self.get_soup(url)
 
-    def getSoup(self, url):
+    def get_soup(self, url):
         # print(url)
         x = AccessPage(url)
         soup = BeautifulSoup(x.content, 'html.parser')

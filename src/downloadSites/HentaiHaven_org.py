@@ -1,63 +1,61 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
-
-import os
-import re
-import sys
 import http.client
 import importlib
+import re
+import sys
 from urllib.parse import urlparse
+
 from bs4 import BeautifulSoup
 
-from .AccessSite.OpenHTML import AccessPage
 from . import tiwi_kiwi
+from .AccessSite.OpenHTML import AccessPage
 
 importlib.reload(sys)
 SeqFlag = True
 
 
-class run(object):
-    """docstring for run"""
-    def __init__(self, url, urlArray):
-        super(run, self).__init__()
+class Run(object):
+    """docstring for Run"""
+    def __init__(self, url, url_array):
+        super(Run, self).__init__()
         self.urls = []
         # get type and soup
-        st = SiteType(urlArray)
+        st = SiteType(url_array)
         soup = SoupURL(url)
-        urls = self.getUrls(st.type, soup.soup)
-        self.filestatus = {'urls': urls, 'dir': 'h_anime_place'}
+        urls = self.get_urls(st.type, soup.soup)
+        self.file_status = {'urls': urls, 'dir': 'h_anime_place'}
 
-    def getUrls(self, urlType, soup):
-        if urlType == 'media':
-            listUrl = Media(soup).pref
-        elif urlType == 'index':
-            listUrl = Index(soup).pref
+    def get_urls(self, url_type, soup):
+        if url_type == 'media':
+            list_url = Media(soup).pref
+        elif url_type == 'index':
+            list_url = Index(soup).pref
         else:
-            listUrl = []
-        return listUrl
+            list_url = []
+        return list_url
 
 
 class SiteType(object):
     """docstring for SiteType"""
-    def __init__(self, urlArray):
+    def __init__(self, url_array):
         super(SiteType, self).__init__()
-        self.type = self.getType(urlArray)
+        self.type = self.get_type(url_array)
 
-    def getType(self, urlArray):
-        if 'episode' in urlArray[1]:
-            urlType = 'media'
+    def get_type(self, url_array):
+        if 'episode' in url_array[1]:
+            url_type = 'media'
         else:
-            urlType = 'index'
-        return urlType
+            url_type = 'index'
+        return url_type
 
 
 class SoupURL(object):
     """docstring for SoupURL"""
     def __init__(self, url):
         super(SoupURL, self).__init__()
-        self.soup = self.getSoup(url)
+        self.soup = self.get_soup(url)
 
-    def getSoup(self, url):
+    def get_soup(self, url):
         x = AccessPage(url)
         soup = BeautifulSoup(x.html)
         return soup
@@ -69,12 +67,12 @@ class Media(object):
     def __init__(self, soup):
         super(Media, self).__init__()
         x = {}
-        x['title'] = self.getTitle(soup)
+        x['title'] = self.get_title(soup)
         # get download link
-        x['href'] = self.getFileURL(soup)
+        x['href'] = self.get_file_url(soup)
         self.pref = [x]
 
-    def getTitle(self, soup):
+    def get_title(self, soup):
         try:
             title = soup.title.string.split("|")[0].strip()
             title = re.sub(r'[^(\w\d\-\[\])]', '', title)
@@ -83,16 +81,16 @@ class Media(object):
         except:
             raise
 
-    def getFileURL(self, soup):
+    def get_file_url(self, soup):
         self.checkDL = False
         url = ''
         if not self.checkDL:
-            url = self.getURL_fromDirectly(soup)
+            url = self.get_url_from_dir(soup)
         if not self.checkDL:
-            url = self.getURL_fromTIWIKIWI(soup)
+            url = self.get_url_from_tiwikiwi(soup)
         return url
 
-    def getURL_fromDirectly(self, soup):
+    def get_url_from_dir(self, soup):
         try:
             a_s = soup.findAll("a", attrs={"class": "btn btn-1 btn-1e"})
             url = a_s[0]['href'].encode("utf8")
@@ -101,31 +99,31 @@ class Media(object):
         except:
             self.checkDL = False
 
-    def expandShortenURL(self, surl):
+    def expand_shorten_url(self, surl):
         parsed = urlparse(surl)
         h = http.client.HTTPConnection(parsed.netloc)
         h.request('HEAD', parsed.path)
         response = h.getresponse()
-        if response.status/100 == 3 and response.getheader('Location'):
+        if response.status / 100 == 3 and response.getheader('Location'):
             return response.getheader('Location')
         else:
             return surl
 
-    def getURL_fromTiwikiwi(self, url):
+    def get_url_from_tiwikiwi(self, soup):
         try:
-            shortURL = soup.article.find(
+            short_url = soup.article.find(
                 "a", attrs={"class": "btn btn-1 btn-1e"}
             )["href"]
-            url = self.expandShortenURL(shortURL)
+            url = self.expand_shorten_url(short_url)
             url = AccessPage(url).html.url
             if 'tiwi.kiwi' in url:
                 originurl = url
                 url = url.replace('http://', '')
-                urlArray = url.split('/')
-                site = tiwi_kiwi.run(originurl, urlArray)
-                fileURL = site.urls[0]['href'].encode("utf8")
+                url_array = url.split('/')
+                site = tiwi_kiwi.Run(originurl, url_array)
+                file_url = site.urls[0]['href'].encode("utf8")
                 self.checkDL = True
-                return fileURL
+                return file_url
         except:
             self.checkDL = False
 
@@ -136,7 +134,7 @@ class Index(object):
     def __init__(self, soup):
         super(Index, self).__init__()
         self.pref = []
-        urls = self.getMediaURL(soup)
+        urls = self.get_media_url(soup)
         for x in urls:
             try:
                 l = {}
@@ -150,7 +148,7 @@ class Index(object):
             else:
                 print(x)
 
-    def getMediaURL(self, soup):
+    def get_media_url(self, soup):
         a_tag = soup.findAll("a", attrs={"class": "thumbnail-image"})
         media_url = []
         for x in a_tag:
@@ -163,9 +161,9 @@ class Index(object):
 
 # url = url.replace('https', 'http')
 # aurl = url.replace('http://', '')
-# urlArray = aurl.split('/')
+# url_array = aurl.split('/')
 
-# x = run(url, urlArray)
+# x = Run(url, url_array)
 # for media in x.urls:
 #     print(media['title'])
 #     print(media['href'])

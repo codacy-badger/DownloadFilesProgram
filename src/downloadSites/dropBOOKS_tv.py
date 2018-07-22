@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import re
 import datetime
+import re
 
 from bs4 import BeautifulSoup
 
@@ -11,64 +11,64 @@ SeqFlag = True
 LimitTime = None
 
 
-class run(object):
-    """docstring for run"""
-    def __init__(self, url, urlArray, limit=None):
-        super(run, self).__init__()
+class Run(object):
+    """docstring for Run"""
+    def __init__(self, url, url_array, limit=None):
+        super(Run, self).__init__()
         self.urls = []
         global LimitTime
         LimitTime = limit
         # get type and soup
-        st = SiteType(urlArray)
+        st = SiteType(url_array)
         soup = SoupURL(url)
-        urls = self.getUrls(st.type, soup.s, urlArray)
-        self.filestatus = {'urls': urls, 'dir': 'h_manga_place'}
+        urls = self.get_urls(st.type, soup.s, url_array)
+        self.file_status = {'urls': urls, 'dir': 'h_manga_place'}
 
-    def getUrls(self, urlType, soup, urlArray):
-        if urlType == 'media':
-            listUrl = Media(soup).pref
-        elif urlType == 'index':
-            listUrl = Index(soup).pref
-        elif urlType == 'sequence':
-            listUrl = Sequence(soup, urlArray).pref
+    def get_urls(self, url_type, soup, url_array):
+        if url_type == 'media':
+            list_url = Media(soup).pref
+        elif url_type == 'index':
+            list_url = Index(soup).pref
+        elif url_type == 'sequence':
+            list_url = Sequence(soup, url_array).pref
         else:
-            listUrl = []
-        return listUrl
+            list_url = []
+        return list_url
 
 
 class SiteType(object):
     """docstring for SiteType"""
-    def __init__(self, urlArray):
+    def __init__(self, url_array):
         super(SiteType, self).__init__()
-        self.type = self.getType(urlArray)
+        self.type = self.get_type(url_array)
 
-    def getType(self, urlArray):
+    def get_type(self, url_array):
         global SeqFlag
-        if urlArray[1] == 'detail':
+        if url_array[1] == 'detail':
             global Title
-            urlType = 'media'   # media url
-            Title = urlArray[-1]
-        elif urlArray[2] == 'index':
-            urlType = 'index'   # search result
-            if urlArray[-1] == 'SEQUENCE':
+            url_type = 'media'   # media url
+            Title = url_array[-1]
+        elif url_array[2] == 'index':
+            url_type = 'index'   # search result
+            if url_array[-1] == 'SEQUENCE':
                 if SeqFlag:
                     SeqFlag = False
-                    urlType = 'sequence'   # search result
+                    url_type = 'sequence'   # search result
                     print('ok')
                 else:
-                    urlType = 'index'
+                    url_type = 'index'
         else:
-            urlType = None
-        return urlType
+            url_type = None
+        return url_type
 
 
 class SoupURL(object):
     """docstring for SoupURL"""
     def __init__(self, url):
         super(SoupURL, self).__init__()
-        self.s = self.getSoup(url)
+        self.s = self.get_soup(url)
 
-    def getSoup(self, url):
+    def get_soup(self, url):
         x = AccessPage(url)
         soup = BeautifulSoup(x.html)
         return soup
@@ -79,11 +79,11 @@ class Media(object):
     def __init__(self, soup):
         super(Media, self).__init__()
         x = {}
-        x['title'] = self.getTitle(soup)
-        x['href'] = self.getFileURL(soup)
+        x['title'] = self.get_title(soup)
+        x['href'] = self.get_file_url(soup)
         self.pref = [x]
 
-    def getTitle(self, soup):
+    def get_title(self, soup):
         try:
             title = soup.title.string
             if title[0:5] == u'COMIC':
@@ -92,19 +92,17 @@ class Media(object):
         except:
             raise
 
-    def getFileURL(self, soup):
+    def get_file_url(self, soup):
         try:
-            topUrl = "http://dlbooks.to"
-            fileURL = (
-                topUrl
-                +
-                [
+            top_url = "http://dlbooks.to"
+            file_url = (
+                top_url + [
                     x.get("href")
                     for x in soup.body.div.findAll("a")
                     if x.get("href").count('download_zip')
                 ][0]
             )
-            return fileURL
+            return file_url
         except:
             raise
 
@@ -113,15 +111,15 @@ class Index(object):
     """docstring for Index"""
     def __init__(self, soup):
         super(Index, self).__init__()
-        self.pref = self.getMediaURL(soup)
+        self.pref = self.get_media_url(soup)
         # filter
         buf = []
         for x in self.pref:
-            if self.fileFilter(x['title']):
+            if self.file_filter(x['title']):
                 buf += [x]
         self.pref = buf
 
-    def getMediaURL(self, soup):
+    def get_media_url(self, soup):
         tab_h3 = (
             soup.body.
             find('div', id="container").find('div', id="wrap").
@@ -145,12 +143,14 @@ class Index(object):
             }]
         return fix
 
-    def fileFilter(self, title):
+    def file_filter(self, title):
         title = title.strip()
 
         if re.match(r'^\[.+\](?!.+_\d).+$', title) is not None:
             return True
-        elif re.match(u'^\((C|成年コミック|同人CG集).+\)*\[.+\](?!.+_\d).+$', title) is not None:
+        elif re.match(
+            u'^\((C|成年コミック|同人CG集).+\)*\[.+\](?!.+_\d).+$', title
+        ) is not None:
             return True
         elif re.match(r'^COMIC.+(?!.+_\d).+$', title) is not None:
             return True
@@ -159,61 +159,61 @@ class Index(object):
 
 class Sequence(object):
     """docstring for Sequence"""
-    def __init__(self, soup, urlArray):
+    def __init__(self, soup, url_array):
         super(Sequence, self).__init__()
         # init
         global SeqFlag
-        stopTime = self.getLimit()
+        stop_time = self.get_limit()
         self.pref = []
         # view time now
         d = datetime.datetime.today()
         print('--- Donwload Sequence dropBOOKS ---')
-        print('http://' + '/'.join(urlArray))
+        print('http://' + '/'.join(url_array))
         print('Start Time is {}/{}/{} {}:{}'.format(
             d.year, d.month, d.day, d.hour, d.minute))
         # start analy
-        del urlArray[-1]
+        del url_array[-1]
         i = 1
         while True:
             print('Scaning page:' + str(i) + '...')
-            url = 'http://' + '/'.join(urlArray) + '/page:' + str(i)
+            url = 'http://' + '/'.join(url_array) + '/page:' + str(i)
             soup = SoupURL(url).s
             self.pref += Index(soup).pref
             i += 1
-            if self.getFilesDay(soup) < stopTime:
+            if self.get_files_day(soup) < stop_time:
                 break
         # Finish
         SeqFlag = True
         print("")
 
-    def getLimit(self):
+    def get_limit(self):
         global LimitTime
         # check LimitTime
-        limitDay = LimitTime
-        if limitDay is None:
+        limit_day = LimitTime
+        if limit_day is None:
             print('Till when?')
             print('ex. YYYY/MM/DD hh:mm')
-            limitDay = raw_input('-> ')
+            limit_day = raw_input('-> ')
         # check Str Type
         while True:
-            LimitTime = limitDay
-            limitDay = limitDay.replace(' ', '')
-            limitDay = limitDay.replace('/', '').replace(':', '')
-            if len(limitDay) == 12:
-                return int(limitDay)
+            LimitTime = limit_day
+            limit_day = limit_day.replace(' ', '')
+            limit_day = limit_day.replace('/', '').replace(':', '')
+            if len(limit_day) == 12:
+                return int(limit_day)
             else:
                 print('Oops!')
-                limitDay = raw_input('-> ')
+                limit_day = raw_input('-> ')
 
-    def getFilesDay(self, soup):
+    def get_files_day(self, soup):
         p_tab = soup.body.findAll('p', attrs={"class": "time"})
         times = []
         # get times
         for x in p_tab:
-            timeStr = x.string[1:]
-            timeStr = timeStr.replace(' ', '')
-            timeStr = timeStr.replace('/', '').replace(':', '')
-            times.append(int(timeStr))
+            time_string = x.string[1:]
+            time_string = time_string.replace(' ', '')
+            time_string = time_string.replace('/', '').replace(':', '')
+            times.append(int(time_string))
         return min(times)
 
 
@@ -222,9 +222,9 @@ class Sequence(object):
 
 # url = url.replace('https', 'http')
 # aurl = url.replace('http://', '')
-# urlArray = aurl.split('/')
+# url_array = aurl.split('/')
 
-# x = run(url, urlArray)
+# x = Run(url, url_array)
 # for media in x.urls:
 #     print(media['title'])
 #     print(media['href'])

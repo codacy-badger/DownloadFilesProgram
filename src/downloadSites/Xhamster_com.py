@@ -1,55 +1,52 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import os
 import re
-import urllib
 
 from bs4 import BeautifulSoup
 
 from .AccessSite.OpenHTML import AccessPage
 
 
-class run(object):
-    """docstring for run"""
-    def __init__(self, url, urlArray):
-        super(run, self).__init__()
+class Run(object):
+    """docstring for Run"""
+    def __init__(self, url, url_array):
+        super(Run, self).__init__()
         self.urls = []
         # get type and soup
-        st = SiteType(urlArray)
+        st = SiteType(url_array)
         soup = SoupURL(url)
-        urls = self.getUrls(st.type, soup.s)
-        self.filestatus = {'urls': urls, 'dir': 'h_video_place'}
+        urls = self.get_urls(st.type, soup.s)
+        self.file_status = {'urls': urls, 'dir': 'h_video_place'}
 
-    def getUrls(self, urlType, soup):
-        if urlType == 'media':
-            listUrl = Media(soup).pref
+    def get_urls(self, url_type, soup):
+        if url_type == 'media':
+            list_url = Media(soup).pref
         else:
-            listUrl = []
-        return listUrl
+            list_url = []
+        return list_url
 
 
 class SiteType(object):
     """docstring for SiteType"""
-    def __init__(self, urlArray):
+    def __init__(self, url_array):
         super(SiteType, self).__init__()
-        self.type = self.getType(urlArray)
+        self.type = self.get_type(url_array)
 
-    def getType(self, urlArray):
-        if 'movies' in urlArray[1]:
-            urlType = 'media'   # media url
+    def get_type(self, url_array):
+        if 'movies' in url_array[1]:
+            url_type = 'media'   # media url
         else:
-            urlType = None
-        return urlType
+            url_type = None
+        return url_type
 
 
 class SoupURL(object):
     """docstring for SoupURL"""
     def __init__(self, url):
         super(SoupURL, self).__init__()
-        self.s = self.getSoup(url)
+        self.s = self.get_soup(url)
 
-    def getSoup(self, url):
+    def get_soup(self, url):
         x = AccessPage(url)
         soup = BeautifulSoup(x.html)
         return soup
@@ -60,23 +57,23 @@ class Media(object):
     def __init__(self, soup):
         super(Media, self).__init__()
         x = {}
-        x['title'] = self.getTitle(soup)
-        x['href'] = self.getFileURL(soup)
+        x['title'] = self.get_title(soup)
+        x['href'] = self.get_file_url(soup)
         self.pref = [x]
 
-    def getTitle(self, soup):
+    def get_title(self, soup):
         title = soup.find('h1').string.strip()
         title = re.sub(r'[^(\w\d\-\[\])]', '', title) + '.flv'
         return title
 
-    def getFileURL(self, soup):
+    def get_file_url(self, soup):
         try:
             # get script
             scr = soup.find('script', attrs={'type': 'text/javascript'})
-            scrStr = scr.string.replace('\\', '')
+            scr_string = scr.string.replace('\\', '')
             # re
             pattern = re.compile('":\["(.+)"\]}')
-            m = pattern.search(scrStr)
+            m = pattern.search(scr_string)
             media_url = m.group(1).split('"')[-1]
             return media_url
         except:
@@ -88,9 +85,9 @@ class Media(object):
 
 # url = url.replace('https', 'http')
 # aurl = url.replace('http://', '')
-# urlArray = aurl.split('/')
+# url_array = aurl.split('/')
 
-# x = run(url, urlArray)
+# x = Run(url, url_array)
 # for media in x.urls:
 #     print(media['title'])
 #     print(media['href'])

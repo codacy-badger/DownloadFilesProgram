@@ -1,84 +1,83 @@
 # -*- coding: utf-8 -*-
-
-from . import dropBOOKS_tv
-from . import Xvideos_com
-from . import xnxx_com
-from . import AnimeHaven_org
-from . import wakusoku
-from . import Xhamster_com
-from . import lolig_blog
-from . import sugumiru18_com
-from . import HentaiHaven_org
-from . import REDTUBE_com
-from . import moeimg_net
-from . import muchaero_net
-from . import nijibondo_com
-from . import nizigazo_net
-from . import okkisokuho_com
-from . import Pornhub_com
+from . import AnimeHaven_org    # NOQA
+from . import dropBOOKS_tv  # NOQA
+from . import HentaiHaven_org   # NOQA
+from . import lolig_blog    # NOQA
+from . import sugumiru18_com    # NOQA
+from . import REDTUBE_com   # NOQA
+from . import moeimg_net    # NOQA
+from . import muchaero_net  # NOQA
+from . import nijibondo_com # NOQA
+from . import nizigazo_net  # NOQA
+from . import Pornhub_com   # NOQA
+from . import okkisokuho_com    # NOQA
+from . import xnxx_com  # NOQA
+from . import Xvideos_com   # NOQA
+from . import wakusoku  # NOQA
+from . import Xhamster_com  # NOQA
 
 
 class DownloadList(object):
     """docstring for DownloadList"""
     def __init__(self, url, limit=None):
         super(DownloadList, self).__init__()
-        self.fileStatus = self.getFileStatus(url, limit)
+        self.file_status = self.get_file_status(url, limit)
 
-    def getFileStatus(self, url, limit=None):
-        urlArray = self.splitURL(url)
-        if urlArray[0] == 'dlbooks.to':
+    def get_file_status(self, url, limit=None):
+        url_array = self.split_url(url)
+        if url_array[0] == 'dlbooks.to':
             print('dropbooks')
-            fileStatus = dropBOOKS_tv.run(url, urlArray, limit).filestatus
-        elif urlArray[0] == 'www.xvideos.com':
+            file_status = dropBOOKS_tv.Run(url, url_array, limit).file_status
+        elif url_array[0] == 'www.xvideos.com':
             print('xvideos')
-            fileStatus = Xvideos_com.run(url, urlArray).filestatus
-        elif urlArray[0] == 'www.xnxx.com':
+            file_status = Xvideos_com.Run(url, url_array).file_status
+        elif url_array[0] == 'www.xnxx.com':
             print('xnxx')
-            fileStatus = xnxx_com.run(url, urlArray).filestatus
-        elif urlArray[0] == 'animehaven.org' or urlArray[0] == 'animehaven.to':
+            file_status = xnxx_com.Run(url, url_array).file_status
+        elif url_array[0] == 'animehaven.to':
             print('animehaven')
-            fileStatus = AnimeHaven_org.run(url, urlArray).filestatus
-        elif urlArray[0] == 'hentaihaven.org':
+            file_status = AnimeHaven_org.Run(url, url_array).file_status
+        elif url_array[0] == 'hentaihaven.org':
             print('hentaihaven')
-            fileStatus = HentaiHaven_org.run(url, urlArray).filestatus
-        elif urlArray[0] == 'blog.livedoor.jp':
-            if urlArray[1] == 'wakusoku':
+            file_status = HentaiHaven_org.Run(url, url_array).file_status
+        elif url_array[0] == 'blog.livedoor.jp':
+            if url_array[1] == 'wakusoku':
                 print('wakusoku')
-                fileStatus = wakusoku.run(url, urlArray, limit).filestatus
-        elif urlArray[0] == 'xhamster.com':
+                file_status = wakusoku.Run(url, url_array, limit).file_status
+        elif url_array[0] == 'xhamster.com':
             print('XHamster')
-            fileStatus = Xhamster_com.run(url, urlArray).filestatus
-        elif urlArray[0] == 'lolig.blog.jp':
+            file_status = Xhamster_com.Run(url, url_array).file_status
+        elif url_array[0] == 'lolig.blog.jp':
             print('lolig')
-            fileStatus = lolig_blog.run(url, urlArray, limit).filestatus
-        elif urlArray[0] == 'sugumiru18.com':
+            file_status = lolig_blog.Run(url, url_array, limit).file_status
+        elif url_array[0] == 'sugumiru18.com':
             print('sugumiru18')
-            fileStatus = sugumiru18_com.run(url, urlArray, limit).filestatus
-        elif urlArray[0] == 'www.redtube.com':
+            file_status = sugumiru18_com.Run(url, url_array, limit).file_status
+        elif url_array[0] == 'www.redtube.com':
             print('REDTUBE')
-            fileStatus = REDTUBE_com.run(url, urlArray).filestatus
-        elif urlArray[0] == 'moeimg.net':
+            file_status = REDTUBE_com.Run(url, url_array).file_status
+        elif url_array[0] == 'moeimg.net':
             print('moeimg')
-            fileStatus = moeimg_net.run(url, urlArray, limit).filestatus
-        elif urlArray[0] == 'muchaero.net':
+            file_status = moeimg_net.Run(url, url_array, limit).file_status
+        elif url_array[0] == 'muchaero.net':
             print('muchaero')
-            fileStatus = muchaero_net.run(url, urlArray, limit).filestatus
-        elif urlArray[0] == 'nizigazo.net':
+            file_status = muchaero_net.Run(url, url_array, limit).file_status
+        elif url_array[0] == 'nizigazo.net':
             print('nizigazo')
-            fileStatus = nizigazo_net.run(url, urlArray, limit).filestatus
-        elif urlArray[0] == 'nijibondo.com':
+            file_status = nizigazo_net.Run(url, url_array, limit).file_status
+        elif url_array[0] == 'nijibondo.com':
             print('nijibondo')
-            fileStatus = nijibondo_com.run(url, urlArray, limit).filestatus
-        elif urlArray[0] == 'okkisokuho.com':
+            file_status = nijibondo_com.Run(url, url_array, limit).file_status
+        elif url_array[0] == 'okkisokuho.com':
             print('okkisokuho')
-            fileStatus = okkisokuho_com.run(url, urlArray, limit).filestatus
-        elif urlArray[0] == 'www.pornhub.com' or urlArray[0] == 'jp.pornhub.com':
+            file_status = okkisokuho_com.Run(url, url_array, limit).file_status
+        elif url_array[0] == 'www.pornhub.com':
             print('pornhub')
-            fileStatus = Pornhub_com.run(url, urlArray).filestatus
-        return fileStatus
+            file_status = Pornhub_com.Run(url, url_array).file_status
+        return file_status
 
-    def splitURL(self, url):
+    def split_url(self, url):
         url = url.replace('https', 'http')
         url = url.replace('http://', '')
-        urlArray = url.split('/')
-        return urlArray
+        url_array = url.split('/')
+        return url_array

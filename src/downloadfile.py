@@ -1,11 +1,8 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
-
-import os
-import sys
 import socket
-import urllib
 import subprocess
+import sys
+import urllib
 
 
 class DownloadFile(object):
@@ -59,7 +56,7 @@ class DownloadFile(object):
             #     (bytes_so_far, total_size, percent)
             # )
             sys.stdout.write(
-                "%.2f %% (%d MB)\r" % (percent, total_size/1024/1024)
+                "%.2f %% (%d MB)\r" % (percent, total_size / 1024 / 1024)
             )
 
             if bytes_so_far >= total_size:
@@ -71,8 +68,6 @@ class DownloadFile(object):
         # Open the url
         try:
             user_agent = 'Mozilla/5.0'
-            # user_agent = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.63 Safari/537.36'
-            # user_agent = 'Wget/1.9.1'
             req = urllib.Request(str(url))
             req.add_header("User-agent", user_agent)
             response = urllib.urlopen(req, timeout=5)
