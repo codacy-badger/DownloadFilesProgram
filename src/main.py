@@ -109,7 +109,7 @@ def main():
     print ""
 
     # get place of URL list file
-    setPlace = 'setting.json'
+    setPlace = '../setting.json'
     while True:
         try:
             setting = INIT(setPlace)
