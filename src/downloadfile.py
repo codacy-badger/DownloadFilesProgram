@@ -5,7 +5,6 @@ import os
 import sys
 import socket
 import urllib
-import urllib2
 import subprocess
 
 
@@ -42,11 +41,11 @@ class DownloadFile(object):
         if self.loopcnt > 3:
             try:
                 cmd = 'wget "{}" -O "{}"'.format(url, filename)
-                print '>> ' + cmd
+                print('>> ' + cmd)
                 subprocess.call(cmd, shell=True)
-                raise urllib2.HTTPError('over 3times')
+                raise urllib.HTTPError('over 3times')
             except Exception as e:
-                print e
+                print(e)
                 raise
         else:
             self.loopcnt += 1
@@ -74,9 +73,9 @@ class DownloadFile(object):
             user_agent = 'Mozilla/5.0'
             # user_agent = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.63 Safari/537.36'
             # user_agent = 'Wget/1.9.1'
-            req = urllib2.Request(str(url))
+            req = urllib.Request(str(url))
             req.add_header("User-agent", user_agent)
-            response = urllib2.urlopen(req, timeout=5)
+            response = urllib.urlopen(req, timeout=5)
             data = self.chunk_read(
                 response,
                 report_hook=chunk_report)
@@ -84,17 +83,17 @@ class DownloadFile(object):
             with open(filename, "wb") as local_file:
                 local_file.write(data)
         # handle errors
-        except urllib2.HTTPError, e:
-            print "HTTP Error:", e.code, url
+        except urllib.HTTPError as e:
+            print("HTTP Error:", e.code, url)
             if not (self.loopcnt > 3):
                 self.dlfile(url, filename)
             else:
                 raise
-        except urllib2.URLError, e:
-            print "URL Error:", e.reason, url
+        except urllib.URLError as e:
+            print("URL Error:", e.reason, url)
             self.dlfile(url, filename)
-        except socket.timeout, e:
-            print "Timeout Error         "
+        except socket.timeout as e:
+            print("Timeout Error         ")
             self.dlfile(url, filename)
         except Exception as e:
             raise

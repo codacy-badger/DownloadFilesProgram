@@ -1,9 +1,6 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
-# -*- coding: cp932 -*-
-
-import LoadFiles
-import PathCheck
+from . import LoadFiles
+from . import PathCheck
 
 
 class INIT(object):

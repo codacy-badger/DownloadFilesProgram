@@ -1,19 +1,18 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# -*- coding: cp932 -*-
 
 import os
 import re
 import sys
-import httplib
-import urlparse
-from BeautifulSoup import BeautifulSoup
+import http.client
+import importlib
+from urllib.parse import urlparse
+from bs4 import BeautifulSoup
 
-from AccessSite.OpenHTML import AccessPage
-import tiwi_kiwi
+from .AccessSite.OpenHTML import AccessPage
+from . import tiwi_kiwi
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+importlib.reload(sys)
 SeqFlag = True
 
 
@@ -103,8 +102,8 @@ class Media(object):
             self.checkDL = False
 
     def expandShortenURL(self, surl):
-        parsed = urlparse.urlparse(surl)
-        h = httplib.HTTPConnection(parsed.netloc)
+        parsed = urlparse(surl)
+        h = http.client.HTTPConnection(parsed.netloc)
         h.request('HEAD', parsed.path)
         response = h.getresponse()
         if response.status/100 == 3 and response.getheader('Location'):
@@ -147,9 +146,9 @@ class Index(object):
                 l['href'] = m.pref[0]['href'].encode("utf8")
                 self.pref += [l]
             except:
-                print 'Error: ' + x
+                print('Error: ' + x)
             else:
-                print x
+                print(x)
 
     def getMediaURL(self, soup):
         a_tag = soup.findAll("a", attrs={"class": "thumbnail-image"})
@@ -168,6 +167,6 @@ class Index(object):
 
 # x = run(url, urlArray)
 # for media in x.urls:
-#     print media['title']
-#     print media['href']
-#     print ''
+#     print(media['title'])
+#     print(media['href'])
+#     print('')

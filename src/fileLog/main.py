@@ -1,8 +1,7 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 import os
-from codec import Codec
+from .codec import Codec
 
 
 class URLlog(object):

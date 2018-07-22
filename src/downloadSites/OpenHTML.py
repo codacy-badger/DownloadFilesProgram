@@ -6,8 +6,8 @@ import os
 import sys
 import json
 from selenium import webdriver
-import urllib2
-from BeautifulSoup import BeautifulSoup
+import urllib
+from bs4 import BeautifulSoup
 
 
 class AccessPage(object):
@@ -27,10 +27,10 @@ class AccessPage(object):
             # set user
             user_agent = 'Mozilla/5.0'
             # user_agent = 'Chrome/41.0.2228.0'
-            req = urllib2.Request(url)
+            req = urllib.Request(url)
             req.add_header("User-agent", user_agent)
             # access page
-            return urllib2.urlopen(req)
+            return urllib.urlopen(req)
         except:
             raise
 
@@ -56,7 +56,7 @@ class SoupURL(object):
         self.s = self.getSoup(url)
 
     def getSoup(self, url):
-        # print url
+        # print(url)
         x = AccessPage(url)
         soup = BeautifulSoup(x.content, 'html.parser')
         return soup

@@ -4,11 +4,11 @@
 
 import os
 import re
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
-from OpenHTML import AccessPage
-import tiwi_kiwi
-import STREAMMOE
+from .OpenHTML import AccessPage
+from . import tiwi_kiwi
+from . import STREAMMOE
 
 
 SeqFlag = True
@@ -176,9 +176,9 @@ class Index(object):
                 l['href'] = m.pref[0]['href'].encode("utf8")
                 self.pref += [l]
             except:
-                print 'Error: ' + x
+                print('Error: ' + x)
             else:
-                print x
+                print(x)
 
     def getMediaURL(self, soup):
         tag_h2 = soup.findAll('h2', attrs={'class': 'entry-title'})
@@ -197,6 +197,6 @@ class Index(object):
 
 # x = run(url, urlArray)
 # for media in x.urls:
-#     print media['title']
-#     print media['href']
-#     print ''
+#     print(media['title'])
+#     print(media['href'])
+#     print('')

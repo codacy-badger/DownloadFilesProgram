@@ -1,24 +1,21 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
-# -*- coding: cp932 -*-
 
-
-import dropBOOKS_tv
-import Xvideos_com
-import xnxx_com
-import AnimeHaven_org
-import wakusoku
-import Xhamster_com
-import lolig_blog
-import sugumiru18_com
-import HentaiHaven_org
-import REDTUBE_com
-import moeimg_net
-import muchaero_net
-import nijibondo_com
-import nizigazo_net
-import okkisokuho_com
-import Pornhub_com
+from . import dropBOOKS_tv
+from . import Xvideos_com
+from . import xnxx_com
+from . import AnimeHaven_org
+from . import wakusoku
+from . import Xhamster_com
+from . import lolig_blog
+from . import sugumiru18_com
+from . import HentaiHaven_org
+from . import REDTUBE_com
+from . import moeimg_net
+from . import muchaero_net
+from . import nijibondo_com
+from . import nizigazo_net
+from . import okkisokuho_com
+from . import Pornhub_com
 
 
 class DownloadList(object):
@@ -30,53 +27,53 @@ class DownloadList(object):
     def getFileStatus(self, url, limit=None):
         urlArray = self.splitURL(url)
         if urlArray[0] == 'dlbooks.to':
-            print 'dropbooks'
+            print('dropbooks')
             fileStatus = dropBOOKS_tv.run(url, urlArray, limit).filestatus
         elif urlArray[0] == 'www.xvideos.com':
-            print 'xvideos'
+            print('xvideos')
             fileStatus = Xvideos_com.run(url, urlArray).filestatus
         elif urlArray[0] == 'www.xnxx.com':
-            print 'xnxx'
+            print('xnxx')
             fileStatus = xnxx_com.run(url, urlArray).filestatus
         elif urlArray[0] == 'animehaven.org' or urlArray[0] == 'animehaven.to':
-            print 'animehaven'
+            print('animehaven')
             fileStatus = AnimeHaven_org.run(url, urlArray).filestatus
         elif urlArray[0] == 'hentaihaven.org':
-            print 'hentaihaven'
+            print('hentaihaven')
             fileStatus = HentaiHaven_org.run(url, urlArray).filestatus
         elif urlArray[0] == 'blog.livedoor.jp':
             if urlArray[1] == 'wakusoku':
-                print 'wakusoku'
+                print('wakusoku')
                 fileStatus = wakusoku.run(url, urlArray, limit).filestatus
         elif urlArray[0] == 'xhamster.com':
-            print 'XHamster'
+            print('XHamster')
             fileStatus = Xhamster_com.run(url, urlArray).filestatus
         elif urlArray[0] == 'lolig.blog.jp':
-            print 'lolig'
+            print('lolig')
             fileStatus = lolig_blog.run(url, urlArray, limit).filestatus
         elif urlArray[0] == 'sugumiru18.com':
-            print 'sugumiru18'
+            print('sugumiru18')
             fileStatus = sugumiru18_com.run(url, urlArray, limit).filestatus
         elif urlArray[0] == 'www.redtube.com':
-            print 'REDTUBE'
+            print('REDTUBE')
             fileStatus = REDTUBE_com.run(url, urlArray).filestatus
         elif urlArray[0] == 'moeimg.net':
-            print 'moeimg'
+            print('moeimg')
             fileStatus = moeimg_net.run(url, urlArray, limit).filestatus
         elif urlArray[0] == 'muchaero.net':
-            print 'muchaero'
+            print('muchaero')
             fileStatus = muchaero_net.run(url, urlArray, limit).filestatus
         elif urlArray[0] == 'nizigazo.net':
-            print 'nizigazo'
+            print('nizigazo')
             fileStatus = nizigazo_net.run(url, urlArray, limit).filestatus
         elif urlArray[0] == 'nijibondo.com':
-            print 'nijibondo'
+            print('nijibondo')
             fileStatus = nijibondo_com.run(url, urlArray, limit).filestatus
         elif urlArray[0] == 'okkisokuho.com':
-            print 'okkisokuho'
+            print('okkisokuho')
             fileStatus = okkisokuho_com.run(url, urlArray, limit).filestatus
         elif urlArray[0] == 'www.pornhub.com' or urlArray[0] == 'jp.pornhub.com':
-            print 'pornhub'
+            print('pornhub')
             fileStatus = Pornhub_com.run(url, urlArray).filestatus
         return fileStatus
 

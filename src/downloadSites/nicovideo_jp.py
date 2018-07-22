@@ -4,9 +4,9 @@
 
 import re
 
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
-from AccessSite.OpenHTML import AccessPage
+from .AccessSite.OpenHTML import AccessPage
 
 
 class run(object):
@@ -90,6 +90,6 @@ class Media(object):
 
 # x = run(url, urlArray)
 # for media in x.urls:
-#     print media['title']
-#     print media['href']
-#     print ''
+#     print(media['title'])
+#     print(media['href'])
+#     print('')

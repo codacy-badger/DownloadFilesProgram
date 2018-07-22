@@ -1,7 +1,4 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
-# -*- coding: cp932 -*-
-
 import os
 import sys
 import json
@@ -22,7 +19,7 @@ class LoadSetting(object):
             with open(jsonFile, 'r') as f:
                 x = json.load(f)
         except:
-            print u"設定ファイルが開けません"
+            print("設定ファイルが開けません")
             sys.exit()
         # fix paths
         for k, v in x.items():

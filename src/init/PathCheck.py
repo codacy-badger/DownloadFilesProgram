@@ -1,7 +1,4 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
-# -*- coding: cp932 -*-
-
 import os
 
 
@@ -19,6 +16,6 @@ class CheckDirectory(object):
     def exit_creat(self, dir_name):
         if not os.path.exists(dir_name):
             os.makedirs(dir_name)
-            print dir_name + " created."
+            print(dir_name + " created.")
         else:
-            print dir_name + " is exit."
+            print(dir_name + " is exit.")

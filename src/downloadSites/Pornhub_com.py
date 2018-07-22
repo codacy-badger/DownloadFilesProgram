@@ -6,9 +6,9 @@ import os
 import re
 import time
 
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
-from AccessSite.OpenHTML import AccessPage
+from .AccessSite.OpenHTML import AccessPage
 
 
 class run(object):
@@ -100,8 +100,8 @@ class Media(object):
 # urlArray = aurl.split('/')
 
 # x = run(url, urlArray)
-# print x.urls
+# print(x.urls)
 # for media in x.urls:
-#     print media['title']
-#     print media['href']
-#     print ''
+#     print(media['title'])
+#     print(media['href'])
+#     print('')

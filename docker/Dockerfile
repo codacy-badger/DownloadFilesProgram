@@ -8,6 +8,8 @@ RUN apt-get update -y && apt-get upgrade -y
 
 # packages
 RUN pip install beautifulsoup4
+RUN pip install -U selenium
+RUN pip install numpy
 
 # user
 RUN export uid=1000 gid=1000 && \

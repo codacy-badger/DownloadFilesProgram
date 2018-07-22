@@ -5,9 +5,9 @@
 import re
 import datetime
 
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
-from AccessSite.OpenHTML import AccessPage
+from .AccessSite.OpenHTML import AccessPage
 
 
 SeqFlag = True
@@ -150,15 +150,15 @@ class Sequence(object):
         self.pref = []
         # view time now
         d = datetime.datetime.today()
-        print '--- Donwload Sequence ロリグ ---'
-        print 'http://' + '/'.join(urlArray)
-        print 'Start Time is %s/%s/%s %s:%s' % (
+        print('--- Donwload Sequence ロリグ ---')
+        print('http://' + '/'.join(urlArray))
+        print('Start Time is {}/{}/{} {}:{}'.format(
             d.year, d.month, d.day, d.hour, d.minute
-        )
+        ))
         # start analy
         del urlArray[-1]
         while True:
-            print 'Scaning page:' + str(i) + '...'
+            print('Scaning page:' + str(i) + '...')
             url = 'http://' + '/'.join(urlArray) + '/?p=' + str(i)
             soup = SoupURL(url).s
             self.pref += Index(soup).pref
@@ -167,15 +167,15 @@ class Sequence(object):
                 break
         # Finish
         SeqFlag = True
-        print ""
+        print("")
 
     def getLimit(self):
         global LimitTime
         # check LimitTime
         limitDay = LimitTime
         if limitDay is None:
-            print 'Till when?'
-            print 'ex. YYYY/MM/DD hh:mm'
+            print('Till when?')
+            print('ex. YYYY/MM/DD hh:mm')
             limitDay = raw_input('-> ')
         # check Str Type
         while True:
@@ -185,7 +185,7 @@ class Sequence(object):
             if len(limitDay) == 12:
                 return int(limitDay)
             else:
-                print 'Oops!'
+                print('Oops!')
                 limitDay = raw_input('-> ')
 
     def getFilesDay(self, soup):
@@ -214,6 +214,6 @@ class Sequence(object):
 
 # x = run(url, urlArray)
 # for media in x.urls:
-#     print media['title']
-#     print media['href']
-#     print ''
+#     print(media['title'])
+#     print(media['href'])
+#     print('')

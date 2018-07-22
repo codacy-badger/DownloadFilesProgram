@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 
@@ -19,7 +18,7 @@ class Codec(object):
             chars = chars.decode('euc-jp')
             return chars.encode('utf-8')
         else:
-            print "encode error: " + chars_type
+            print("encode error: " + chars_type)
             return str(chars)
 
     # code -> unicode
@@ -33,5 +32,5 @@ class Codec(object):
         elif chars_type == 'euc-jp':
             return chars.decode('euc-jp')
         else:
-            print "decode error: " + chars_type
+            print("decode error: " + chars_type)
             return chars

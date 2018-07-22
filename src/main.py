@@ -3,7 +3,6 @@
 
 import os
 import sys
-import commands as cmd
 import glob
 import argparse
 
@@ -42,7 +41,7 @@ class Download(object):
 
         try:
             if os.path.exists(path) or checklog:
-                print 'PASS : file already exist.'
+                print('PASS : file already exist.')
                 return
             # with urllib
             # urllib.urlretrieve(
@@ -50,12 +49,9 @@ class Download(object):
             #     path,
             #     _progress
             # )
-            # with urllib2
-            print url
-            DownloadFile(
-                url,
-                path
-            )
+            # with urllib
+            print(url)
+            DownloadFile(url, path)
         except:
             raise
         else:
@@ -80,14 +76,14 @@ class LetsDownload(object):
             filename = os.path.join(self.parentDir, media['title'])
             self.missFiles = []
             try:
-                print "Start Download " + media['title'] + " !!"
+                print("Start Download " + media['title'] + " !!")
                 Download(media['href'], filename, self.parentDir)
             except Exception as e:
                 self.missFiles += [media]
-                print 'Error DL : ' + str(e)
-                print 'Miss!!\n'
+                print('Error DL : ' + str(e))
+                print('Miss!!\n')
             else:
-                print 'Finish Download!!\n'
+                print('Finish Download!!\n')
 
     def getDirectory(self, title, **setting):
         ex = title[-4:]
@@ -102,11 +98,11 @@ class LetsDownload(object):
 # === MAIN ===
 def main():
     # title call
-    print ""
-    print "\n--------------------\n"
-    print "  Let's DOWNLOAD!!!"
-    print "\n--------------------\n"
-    print ""
+    print("")
+    print("\n--------------------\n")
+    print("  Let's DOWNLOAD!!!")
+    print("\n--------------------\n")
+    print("")
 
     # get place of URL list file
     setPlace = '../setting.json'
@@ -123,7 +119,7 @@ def main():
         urls = f.readlines()
 
     # download
-    print ''
+    print('')
     for url in urls:
         url = url.strip()
         try:
@@ -135,21 +131,21 @@ def main():
             })
             LetsDownload(**arguments)
         except Exception as e:
-            print e
+            print(e)
 
     # clean dirs
-    print '\nClean Directorys...\n'
+    print('\nClean Directorys...\n')
     dirs = glob.glob(setting.pref['h_pic_place'] + '*/')
     for i in dirs:
         i = i.replace(u'[ナルト-NARUTO]', '')
         if len(glob.glob(i + '*')) == 0:
             try:
                 os.removedirs(i)
-                print i
+                print(i)
             except:
                 pass
 
-    print '\nFINISH!!\n'
+    print('\nFINISH!!\n')
 
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# -*- coding: cp932 -*-
+
+from . import Init

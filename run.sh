@@ -1,8 +1,10 @@
 #!/bin/bash
 
+# init
+data=$(cd ~/Downloads && pwd)
+
 # run
 run_cmd="python main.py"
-run_cmd="touch test.txt"
 
 docker run -it --rm \
     -v="/${PWD}:/work" \
