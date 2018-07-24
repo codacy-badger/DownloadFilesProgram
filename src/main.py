@@ -77,6 +77,7 @@ class LetsDownload(object):
             self.parentDir = arguments['parentDir']
             filename = os.path.join(self.parentDir, media['title'])
             self.missFiles = []
+
             try:
                 print("Start Download " + media['title'] + " !!")
                 Download(media['href'], filename, self.parentDir)
