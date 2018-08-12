@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from . import AnimeHaven_org    # NOQA
-from . import dropBOOKS_tv  # NOQA
+from . import xbooks_to     # NOQA
 from . import HentaiHaven_org   # NOQA
 from . import lolig_blog    # NOQA
 from . import sugumiru18_com    # NOQA
@@ -27,7 +27,7 @@ class DownloadList(object):
         url_array = self.split_url(url)
         if url_array[0] == 'dlbooks.to':
             print('dropbooks')
-            file_status = dropBOOKS_tv.Run(url, url_array, limit).file_status
+            file_status = xbooks_to.Run(url, url_array, limit).file_status
         elif url_array[0] == 'www.xvideos.com':
             print('xvideos')
             file_status = Xvideos_com.Run(url, url_array).file_status
