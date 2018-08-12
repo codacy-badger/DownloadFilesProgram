@@ -12,6 +12,8 @@ RUN pip install beautifulsoup4
 RUN pip install -U selenium
 RUN pip install numpy
 RUN pip install file-downloader
+RUN pip install requests
+RUN pip install tqdm
 RUN pip install pip-review
 RUN pip-review --auto
 

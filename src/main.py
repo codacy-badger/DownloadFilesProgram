@@ -47,13 +47,11 @@ class Download(object):
             if os.path.exists(path) or check_log:
                 print('PASS : file already exist.')
                 return
-            # DownloadFile(url, path)
-            dl = downloader.Download(url, path)
-            dl.download()
+            DownloadFile(url, path)
         except:
             raise
         else:
-            URLlog(logdir, url).check_log(addURL=True)
+            URLlog(logdir, url).check_log(add_url=True)
 
     def check_dir(self, path):
         array = path.split('/')
@@ -77,6 +75,8 @@ class LetsDownload(object):
             try:
                 print("Start Download " + media['title'] + " !!")
                 Download(media['href'], filename, self.parentDir)
+                # loader = downloader.Download(media['href'], filename)
+                # loader.download()
             except Exception as e:
                 self.missFiles += [media]
                 print('Error DL : ' + str(e))

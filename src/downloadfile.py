@@ -4,6 +4,8 @@ import subprocess
 import sys
 import urllib
 import urllib3
+import requests
+from tqdm import tqdm
 
 
 class DownloadFile(object):
@@ -13,31 +15,8 @@ class DownloadFile(object):
         self.headers = {
             'User-Agent':  'Mozilla/5.0'
         }
-        self.http = urllib3.PoolManager()
         self.loopcnt = 0
         self.dlfile(url, filename)
-
-    def chunk_read(self, response, chunk_size=8192, report_hook=None):
-        total_size = response.info()['Content-Length'].strip()
-        total_size = int(total_size)
-        bytes_so_far = 0
-        data = []
-
-        while 1:
-            try:
-                chunk = response.read(chunk_size)
-            except:
-                raise
-            bytes_so_far += len(chunk)
-
-            if not chunk:
-                break
-
-            data += chunk
-            if report_hook:
-                report_hook(bytes_so_far, chunk_size, total_size)
-
-        return "".join(data)
 
     def dlfile(self, url, filename):
         if self.loopcnt > 3:
@@ -45,42 +24,28 @@ class DownloadFile(object):
                 cmd = 'wget "{}" -O "{}"'.format(url, filename)
                 print('>> ' + cmd)
                 subprocess.call(cmd, shell=True)
-                raise urllib3.exceptions.HTTPError('over 3times')
+                raise requests.HTTPError('over 3times')
             except Exception as e:
                 print(e)
                 raise
         else:
             self.loopcnt += 1
 
-        # --- progress function ---
-        def chunk_report(bytes_so_far, chunk_size, total_size):
-            percent = float(bytes_so_far) / total_size
-            percent = round(percent * 100, 2)
-            # sys.stdout.write(
-            #     "Downloaded %d of %d bytes (%0.2f%%)\r" %
-            #     (bytes_so_far, total_size, percent)
-            # )
-            sys.stdout.write(
-                "%.2f %% (%d MB)\r" % (percent, total_size / 1024 / 1024)
-            )
-
-            if bytes_so_far >= total_size:
-                sys.stdout.write('\n')
-
-            self.percentStack = percent
-        # --------------------------
-
         # Open the url
         try:
-            response = self.http.request('GET', url, headers=self.headers, timeout=5, preload_content=False)
-            data = self.chunk_read(
-                response,
-                report_hook=chunk_report)
+            r = requests.get(url, stream=True, headers=self.headers)
+            total_size = int(r.headers['content-length'])
+            chunk_size = 8192
             # Open our local file for writing
             with open(filename, "wb") as local_file:
-                local_file.write(data)
+                for data in tqdm(
+                    iterable=r.iter_content(chunk_size=chunk_size),
+                    total=total_size / chunk_size,
+                    unit='KB'
+                ):
+                    local_file.write(data)
         # handle errors
-        except urllib3.exceptions.HTTPError as e:
+        except requests.HTTPError as e:
             print("HTTP Error:", e.code, url)
             if not (self.loopcnt > 3):
                 self.dlfile(url, filename)
