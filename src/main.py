@@ -113,7 +113,7 @@ def main():
             setting = INIT(set_place)
             break
         except:
-            set_place = raw_input("Where setting.json? : ")
+            set_place = input("Where setting.json? : ")
             set_place = os.path.expanduser(set_place)
 
     # get urls

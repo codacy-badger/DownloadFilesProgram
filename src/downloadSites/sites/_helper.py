@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import urllib
+import urllib3
 
 from bs4 import BeautifulSoup
 
@@ -10,20 +11,20 @@ class AccessPage(object):
     """docstring for AccessPage"""
     def __init__(self, url):
         super(AccessPage, self).__init__()
-        self.html = ''
-        self.html = self.get_html(url)
+        self.html = self._get_html(url)
 
-    def get_html(self, url):
+    def _get_html(self, url):
         if 'SEQUENCE' in url:
             return ''
         try:
+            http = urllib3.PoolManager()
             # set user
             headers = {
                 'User-Agent':  'Mozilla/5.0'
             }
-            req = urllib.request.Request(url, None, headers)
+            r = http.request('GET', url, headers=headers)
             # access page
-            return urllib.request.urlopen(req)
+            return r.data
         except:
             raise
 

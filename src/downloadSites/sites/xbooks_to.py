@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+import urllib
 import re
 
 from bs4 import BeautifulSoup
@@ -20,8 +21,8 @@ class Run(object):
         LimitTime = limit
         # get type and soup
         st = SiteType(url_array)
-        soup = SoupURL(url)
-        urls = self.get_urls(st.type, soup.s, url_array)
+        soup = get_soup(url)
+        urls = self.get_urls(st.type, soup, url_array)
         self.file_status = {
             'urls': urls,
             'dir': 'h_manga_place'}
@@ -56,7 +57,6 @@ class SiteType(object):
                 if SeqFlag:
                     SeqFlag = False
                     url_type = 'sequence'   # search result
-                    print('ok')
                 else:
                     url_type = 'index'
         else:
@@ -64,16 +64,10 @@ class SiteType(object):
         return url_type
 
 
-class SoupURL(object):
-    """docstring for SoupURL"""
-    def __init__(self, url):
-        super(SoupURL, self).__init__()
-        self.s = self.get_soup(url)
-
-    def get_soup(self, url):
-        x = AccessPage(url)
-        soup = BeautifulSoup(x.html, "html.parser")
-        return soup
+def get_soup(url):
+    x = AccessPage(url)
+    soup = BeautifulSoup(x.html, "html.parser")
+    return soup
 
 
 class Media(object):
@@ -111,22 +105,15 @@ class Index(object):
         self.pref = buf
 
     def get_media_url(self, soup):
-        tab_h3 = (
-            soup.body.
-            find('div', id="container").find('div', id="wrap").
-            find('div', id="outline").find('div', id="main2col").
-            findAll('h3')
-        )
-        # get title and url
-        x = []
-        for i in tab_h3:
-            x += [i.find('a')]
+        # get a tags
+        content_list = soup.select_one('#main2col > div.content_list')
+        h3s = content_list.findAll('h3')
+        x = [h3.a for h3 in h3s]
         # convert url
         fix = []
         for i in x:
             url = (
-                'http://xbooks.to/detail/download_zip/' +
-                i['href'].split('/')[-1]
+                'http://xbooks.to/detail/download_zip/' + i['href'].split('/')[-1]
             )
             fix += [{
                 'title': i['title'].replace('/', '_') + '.zip',
@@ -166,9 +153,10 @@ class Sequence(object):
         del url_array[-1]
         i = 1
         while True:
-            print('Scaning page:' + str(i) + '...')
-            url = 'http://' + '/'.join(url_array) + '/page:' + str(i)
-            soup = SoupURL(url).s
+            print('Scaning page:{}...'.format(i))
+            url = '/'.join(url_array)
+            url = 'http://' + urllib.parse.quote(url) + '/page:{}'.format(i)
+            soup = get_soup(url)
             self.pref += Index(soup).pref
             i += 1
             if self.get_files_day(soup) < stop_time:
@@ -184,23 +172,25 @@ class Sequence(object):
         if limit_day is None:
             print('Till when?')
             print('ex. YYYY/MM/DD hh:mm')
-            limit_day = raw_input('-> ')
+            limit_day = input('-> ')
         # check Str Type
         while True:
             LimitTime = limit_day
             limit_day = limit_day.replace(' ', '')
             limit_day = limit_day.replace('/', '').replace(':', '')
+            limit_day = '{}0000'.format(limit_day)
             if len(limit_day) == 12:
                 return int(limit_day)
             else:
                 print('Oops!')
-                limit_day = raw_input('-> ')
+                limit_day = input('-> ')
 
     def get_files_day(self, soup):
-        p_tab = soup.body.findAll('p', attrs={"class": "time"})
+        content_list = soup.select_one('#main2col > div.content_list')
+        p_tabs = content_list.findAll('p', attrs={"class": "time"})
         times = []
         # get times
-        for x in p_tab:
+        for x in p_tabs:
             time_string = x.string[1:]
             time_string = time_string.replace(' ', '')
             time_string = time_string.replace('/', '').replace(':', '')

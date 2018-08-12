@@ -7,9 +7,16 @@ ENV REFRESHED_AT 2018-7-22
 RUN apt-get update -y && apt-get upgrade -y
 
 # packages
+RUN pip install -U pip
 RUN pip install beautifulsoup4
 RUN pip install -U selenium
 RUN pip install numpy
+RUN pip install pip-review
+RUN pip-review --auto
+
+# env
+ENV LANG ja_JP.UTF-8
+ENV LC_ALL ja_JP.UTF-8
 
 # user
 RUN export uid=1000 gid=1000 && \

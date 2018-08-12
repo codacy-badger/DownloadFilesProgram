@@ -158,7 +158,7 @@ class Sequence(object):
         if limit_day is None:
             print('Till when?')
             print('ex. YYYY/MM/DD hh:mm')
-            limit_day = raw_input('-> ')
+            limit_day = input('-> ')
         # check Str Type
         while True:
             LimitTime = limit_day
@@ -168,7 +168,7 @@ class Sequence(object):
                 return int(limit_day)
             else:
                 print('Oops!')
-                limit_day = raw_input('-> ')
+                limit_day = input('-> ')
 
     def get_files_day(self, soup):
         div_tags = soup.findAll('div', attrs={'class': 'entry_date'})
