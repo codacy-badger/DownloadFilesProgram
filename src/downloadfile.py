@@ -3,12 +3,17 @@ import socket
 import subprocess
 import sys
 import urllib
+import urllib3
 
 
 class DownloadFile(object):
     """docstring for DownloadFile"""
     def __init__(self, url, filename):
         super(DownloadFile, self).__init__()
+        self.headers = {
+            'User-Agent':  'Mozilla/5.0'
+        }
+        self.http = urllib3.PoolManager()
         self.loopcnt = 0
         self.dlfile(url, filename)
 
@@ -40,7 +45,7 @@ class DownloadFile(object):
                 cmd = 'wget "{}" -O "{}"'.format(url, filename)
                 print('>> ' + cmd)
                 subprocess.call(cmd, shell=True)
-                raise urllib.error.HTTPError('over 3times')
+                raise urllib3.exceptions.HTTPError('over 3times')
             except Exception as e:
                 print(e)
                 raise
@@ -67,11 +72,7 @@ class DownloadFile(object):
 
         # Open the url
         try:
-            headers = {
-                'User-Agent':  'Mozilla/5.0'
-            }
-            req = urllib.request.Request(url, None, headers)
-            response = urllib.request.urlopen(req, timeout=5)
+            response = self.http.request('GET', url, headers=self.headers, timeout=5, preload_content=False)
             data = self.chunk_read(
                 response,
                 report_hook=chunk_report)
@@ -79,15 +80,12 @@ class DownloadFile(object):
             with open(filename, "wb") as local_file:
                 local_file.write(data)
         # handle errors
-        except urllib.error.HTTPError as e:
+        except urllib3.exceptions.HTTPError as e:
             print("HTTP Error:", e.code, url)
             if not (self.loopcnt > 3):
                 self.dlfile(url, filename)
             else:
                 raise
-        except urllib.error.URLError as e:
-            print("URL Error:", e.reason, url)
-            self.dlfile(url, filename)
         except socket.timeout as e:
             print("Timeout Error         ")
             self.dlfile(url, filename)

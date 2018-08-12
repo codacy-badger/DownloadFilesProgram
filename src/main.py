@@ -5,6 +5,7 @@ import argparse
 import glob
 import os
 import sys
+import downloader
 
 from downloadSites.site_branch import DownloadList
 
@@ -46,13 +47,9 @@ class Download(object):
             if os.path.exists(path) or check_log:
                 print('PASS : file already exist.')
                 return
-            # with urllib
-            # urllib.urlretrieve(
-            #     url,
-            #     path,
-            #     _progress
-            # )
-            DownloadFile(url, path)
+            # DownloadFile(url, path)
+            dl = downloader.Download(url, path)
+            dl.download()
         except:
             raise
         else:
@@ -84,6 +81,7 @@ class LetsDownload(object):
                 self.missFiles += [media]
                 print('Error DL : ' + str(e))
                 print('Miss!!\n')
+                break
             else:
                 print('Finish Download!!\n')
 
