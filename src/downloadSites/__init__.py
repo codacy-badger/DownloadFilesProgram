@@ -1,2 +1,3 @@
 # -*- coding: utf-8 -*-
-from . import SiteBranch
+
+from . import site_branch
