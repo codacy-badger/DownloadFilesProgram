@@ -24,7 +24,7 @@ class DownloadList(object):
     def get_file_status(self, url, limit=None):
         url_array = self.split_url(url)
         if url_array[0] == 'xbooks.to':
-            print('dropbooks')
+            print('xbooks')
             file_status = xbooks_to.Run(url, url_array, limit).file_status
         elif url_array[0] == 'www.xvideos.com':
             print('xvideos')

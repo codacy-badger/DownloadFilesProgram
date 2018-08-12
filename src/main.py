@@ -125,16 +125,14 @@ def main():
     print('')
     for url in urls:
         url = url.strip()
-        try:
-            x = DownloadList(url, args.limit)
-            arguments = setting.pref
-            arguments = x.fileStatus
-            arguments.update({
-                'parentDir': setting.pref[x.fileStatus['dir']],
-            })
-            LetsDownload(**arguments)
-        except Exception as e:
-            print(e)
+
+        x = DownloadList(url, args.limit)
+        arguments = setting.pref
+        arguments = x.file_status
+        arguments.update({
+            'parentDir': setting.pref[x.file_status['dir']],
+        })
+        LetsDownload(**arguments)
 
     # clean dirs
     print('\nClean Directorys...\n')

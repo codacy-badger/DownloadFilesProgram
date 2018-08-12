@@ -18,10 +18,10 @@ class AccessPage(object):
             return ''
         try:
             # set user
-            user_agent = 'Mozilla/5.0'
-            # user_agent = 'Chrome/41.0.2228.0'
-            req = urllib.request.Request(url)
-            req.add_header("User-agent", user_agent)
+            headers = {
+                'User-Agent':  'Mozilla/5.0'
+            }
+            req = urllib.request.Request(url, None, headers)
             # access page
             return urllib.request.urlopen(req)
         except:
@@ -49,5 +49,5 @@ class SoupURL(object):
     def get_soup(self, url):
         # print url
         x = AccessPage(url)
-        soup = BeautifulSoup(x.html)
+        soup = BeautifulSoup(x.html, "html.parser")
         return soup

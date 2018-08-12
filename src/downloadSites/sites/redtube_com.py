@@ -47,7 +47,7 @@ class SoupURL(object):
 
     def get_soup(self, url):
         x = AccessPage(url)
-        soup = BeautifulSoup(x.html)
+        soup = BeautifulSoup(x.html, "html.parser")
         return soup
 
 

@@ -22,7 +22,9 @@ class Run(object):
         st = SiteType(url_array)
         soup = SoupURL(url)
         urls = self.get_urls(st.type, soup.s, url_array)
-        self.file_status = {'urls': urls, 'dir': 'h_manga_place'}
+        self.file_status = {
+            'urls': urls,
+            'dir': 'h_manga_place'}
 
     def get_urls(self, url_type, soup, url_array):
         if url_type == 'media':
@@ -70,7 +72,7 @@ class SoupURL(object):
 
     def get_soup(self, url):
         x = AccessPage(url)
-        soup = BeautifulSoup(x.html)
+        soup = BeautifulSoup(x.html, "html.parser")
         return soup
 
 
@@ -84,27 +86,16 @@ class Media(object):
         self.pref = [x]
 
     def get_title(self, soup):
-        try:
-            title = soup.title.string
-            if title[0:5] == u'COMIC':
-                title = u'[雑誌]' + title[5:]
-            return title + '.zip'
-        except:
-            raise
+        title = soup.title.string
+        if title[0:5] == u'COMIC':
+            title = u'[雑誌]' + title[5:]
+        return title + '.zip'
 
     def get_file_url(self, soup):
-        try:
-            top_url = "http://dlbooks.to"
-            file_url = (
-                top_url + [
-                    x.get("href")
-                    for x in soup.body.div.findAll("a")
-                    if x.get("href").count('download_zip')
-                ][0]
-            )
-            return file_url
-        except:
-            raise
+        a = soup.select("#download > li:nth-of-type(2) > a")[0]
+        top_url = "http://xbooks.to"
+        file_url = (top_url + a['href'])
+        return file_url
 
 
 class Index(object):
@@ -134,7 +125,7 @@ class Index(object):
         fix = []
         for i in x:
             url = (
-                'http://dlbooks.to/detail/download_zip/' +
+                'http://xbooks.to/detail/download_zip/' +
                 i['href'].split('/')[-1]
             )
             fix += [{
@@ -218,7 +209,7 @@ class Sequence(object):
 
 
 # === test code ===
-# url = 'http://dlbooks.to/tops/index/term:no/page:1'
+# url = 'http://xbooks.to/tops/index/term:no/page:1'
 
 # url = url.replace('https', 'http')
 # aurl = url.replace('http://', '')
