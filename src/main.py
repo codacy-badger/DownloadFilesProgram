@@ -6,7 +6,7 @@ import glob
 import os
 import sys
 
-from downloadSites.SiteBranch import DownloadList
+from downloadSites.site_branch import DownloadList
 
 from downloadfile import DownloadFile
 
