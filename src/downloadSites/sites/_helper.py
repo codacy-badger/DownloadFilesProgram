@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import urllib
 import urllib3
+import certifi
 import re
 
 from bs4 import BeautifulSoup
@@ -27,7 +28,9 @@ class AccessPage(object):
         if 'SEQUENCE' in url:
             return ''
         try:
-            http = urllib3.PoolManager()
+            http = urllib3.PoolManager(
+                cert_reqs='CERT_REQUIRED',
+                ca_certs=certifi.where())
             # set user
             headers = {
                 'User-Agent':  'Mozilla/5.0'

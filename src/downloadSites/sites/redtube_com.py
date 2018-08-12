@@ -68,16 +68,23 @@ class Media(object):
     def get_file_url(self, soup):
         try:
             # get script
-            div = soup.find('div', attrs={'class': 'download-box'})
-            a = div.findAll('a')[1]
-            media_url = 'http:' + a['href']
+            script = soup.select_one('#redtube-player > script:nth-of-type(2)')
+            scr_string = script.string.replace('\\', '')
+            # re
+            strings = scr_string.split('"videoUrl":"')[1:]
+            pattern = re.compile(r'(http.+)"\}')
+            urls = []
+            for s in strings:
+                m = pattern.search(s)
+                urls.append(m.group(1))
+            media_url = urls[0]
             return media_url
         except:
             raise
 
 
 # === test code ===
-# url = 'http://xhamster.com/movies/5141360/hentai_lets_play.html'
+# url = 'https://www.redtube.com/8522831'
 
 # url = url.replace('https', 'http')
 # aurl = url.replace('http://', '')

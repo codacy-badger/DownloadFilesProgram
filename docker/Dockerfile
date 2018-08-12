@@ -14,6 +14,7 @@ RUN pip install numpy
 RUN pip install file-downloader
 RUN pip install requests
 RUN pip install tqdm
+RUN pip install certifi
 RUN pip install pip-review
 RUN pip-review --auto
 
