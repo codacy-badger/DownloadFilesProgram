@@ -40,10 +40,10 @@ class Download(object):
 
         url = Codec().to_utf8(url)
         path = Codec().to_utf8(path)
-        checklog = URLlog(logdir, url).checkLog()
+        check_log = URLlog(logdir, url).check_log()
 
         try:
-            if os.path.exists(path) or checklog:
+            if os.path.exists(path) or check_log:
                 print('PASS : file already exist.')
                 return
             # with urllib
@@ -52,12 +52,11 @@ class Download(object):
             #     path,
             #     _progress
             # )
-            print(url)
             DownloadFile(url, path)
         except:
             raise
         else:
-            URLlog(logdir, url).checkLog(addURL=True)
+            URLlog(logdir, url).check_log(addURL=True)
 
     def check_dir(self, path):
         array = path.split('/')

@@ -13,7 +13,7 @@ class DownloadFile(object):
         self.dlfile(url, filename)
 
     def chunk_read(self, response, chunk_size=8192, report_hook=None):
-        total_size = response.info().getheader('Content-Length').strip()
+        total_size = response.info()['Content-Length'].strip()
         total_size = int(total_size)
         bytes_so_far = 0
         data = []
@@ -40,7 +40,7 @@ class DownloadFile(object):
                 cmd = 'wget "{}" -O "{}"'.format(url, filename)
                 print('>> ' + cmd)
                 subprocess.call(cmd, shell=True)
-                raise urllib.HTTPError('over 3times')
+                raise urllib.error.HTTPError('over 3times')
             except Exception as e:
                 print(e)
                 raise
@@ -67,10 +67,11 @@ class DownloadFile(object):
 
         # Open the url
         try:
-            user_agent = 'Mozilla/5.0'
-            req = urllib.Request(str(url))
-            req.add_header("User-agent", user_agent)
-            response = urllib.urlopen(req, timeout=5)
+            headers = {
+                'User-Agent':  'Mozilla/5.0'
+            }
+            req = urllib.request.Request(url, None, headers)
+            response = urllib.request.urlopen(req, timeout=5)
             data = self.chunk_read(
                 response,
                 report_hook=chunk_report)
@@ -78,13 +79,13 @@ class DownloadFile(object):
             with open(filename, "wb") as local_file:
                 local_file.write(data)
         # handle errors
-        except urllib.HTTPError as e:
+        except urllib.error.HTTPError as e:
             print("HTTP Error:", e.code, url)
             if not (self.loopcnt > 3):
                 self.dlfile(url, filename)
             else:
                 raise
-        except urllib.URLError as e:
+        except urllib.error.URLError as e:
             print("URL Error:", e.reason, url)
             self.dlfile(url, filename)
         except socket.timeout as e:
