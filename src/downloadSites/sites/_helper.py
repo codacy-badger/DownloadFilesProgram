@@ -1,10 +1,20 @@
 # -*- coding: utf-8 -*-
 import urllib
 import urllib3
+import re
 
 from bs4 import BeautifulSoup
 
 from selenium import webdriver
+
+
+def convert_url(url):
+    regex = r'[^\x00-\x7F]'
+    matchedList = re.findall(regex, url)
+    for m in matchedList:
+        url = url.replace(m, urllib.parse.quote_plus(m, encoding = "utf-8"))
+    print(url)
+    return url
 
 
 class AccessPage(object):

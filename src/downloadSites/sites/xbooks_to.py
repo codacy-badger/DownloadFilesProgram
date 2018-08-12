@@ -5,6 +5,7 @@ import re
 
 from bs4 import BeautifulSoup
 
+from . import _helper
 from ._helper import AccessPage
 
 
@@ -154,8 +155,8 @@ class Sequence(object):
         i = 1
         while True:
             print('Scaning page:{}...'.format(i))
-            url = '/'.join(url_array)
-            url = 'http://' + urllib.parse.quote(url) + '/page:{}'.format(i)
+            url = 'http://{}/page:{}'.format('/'.join(url_array), i)
+            url = _helper.convert_url(url)
             soup = get_soup(url)
             self.pref += Index(soup).pref
             i += 1
