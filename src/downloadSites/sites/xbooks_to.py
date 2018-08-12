@@ -4,7 +4,7 @@ import re
 
 from bs4 import BeautifulSoup
 
-from .helper import AccessPage
+from ._helper import AccessPage
 
 
 SeqFlag = True

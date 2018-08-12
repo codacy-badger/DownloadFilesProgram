@@ -6,7 +6,7 @@ from html.parser import HTMLParser
 
 from bs4 import BeautifulSoup
 
-from .helper import AccessPage
+from ._helper import AccessPage
 
 
 class Run(object):

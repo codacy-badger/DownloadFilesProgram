@@ -3,7 +3,7 @@ import datetime
 import os
 import re
 
-from .helper import SoupURL
+from ._helper import SoupURL
 
 
 SeqFlag = True

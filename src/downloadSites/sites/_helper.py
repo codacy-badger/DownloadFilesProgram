@@ -20,10 +20,10 @@ class AccessPage(object):
             # set user
             user_agent = 'Mozilla/5.0'
             # user_agent = 'Chrome/41.0.2228.0'
-            req = urllib.Request(url)
+            req = urllib.request.Request(url)
             req.add_header("User-agent", user_agent)
             # access page
-            return urllib.urlopen(req)
+            return urllib.request.urlopen(req)
         except:
             raise
 

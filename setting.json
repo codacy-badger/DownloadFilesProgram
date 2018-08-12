@@ -6,6 +6,6 @@
     "h_pic_place": "/data/Downloaded/h_pic/",
     "anime_place": "/data/Downloaded/anime/",
 
-    "urls_place": "/data/Downloaded/URLlist.txt",
+    "urls_place": "/data/Downloaded/list.txt",
     "miss_place": "/data/Downloaded/miss.txt"
 }

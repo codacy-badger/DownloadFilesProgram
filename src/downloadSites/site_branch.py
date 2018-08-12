@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
-from . import xbooks_to     # NOQA
-from . import hentaihaven_org   # NOQA
-from . import lolig_blog    # NOQA
-from . import sugumiru18_com    # NOQA
-from . import redtube_com   # NOQA
-from . import moeimg_net    # NOQA
-from . import muchaero_net  # NOQA
-from . import nijibondo_com # NOQA
-from . import nizigazo_net  # NOQA
-from . import pornhub_com   # NOQA
-from . import okkisokuho_com    # NOQA
-from . import xnxx_com  # NOQA
-from . import xvideos_com   # NOQA
-from . import wakusoku  # NOQA
-from . import xhamster_com  # NOQA
+from .sites import xbooks_to     # NOQA
+from .sites import hentaihaven_org   # NOQA
+from .sites import sugumiru18_com    # NOQA
+from .sites import redtube_com   # NOQA
+from .sites import moeimg_net    # NOQA
+from .sites import muchaero_net  # NOQA
+from .sites import nijibondo_com # NOQA
+from .sites import nizigazo_net  # NOQA
+from .sites import pornhub_com   # NOQA
+from .sites import okkisokuho_com    # NOQA
+from .sites import xnxx_com  # NOQA
+from .sites import xvideos_com   # NOQA
+from .sites import wakusoku  # NOQA
+from .sites import xhamster_com  # NOQA
 
 
 class DownloadList(object):

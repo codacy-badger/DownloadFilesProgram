@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 
-from .helper import SoupURL
+from ._helper import SoupURL
 
 
 SeqFlag = True
