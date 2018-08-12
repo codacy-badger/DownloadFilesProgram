@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from . import AnimeHaven_org    # NOQA
 from . import xbooks_to     # NOQA
 from . import HentaiHaven_org   # NOQA
 from . import lolig_blog    # NOQA
@@ -34,9 +33,6 @@ class DownloadList(object):
         elif url_array[0] == 'www.xnxx.com':
             print('xnxx')
             file_status = xnxx_com.Run(url, url_array).file_status
-        elif url_array[0] == 'animehaven.to':
-            print('animehaven')
-            file_status = AnimeHaven_org.Run(url, url_array).file_status
         elif url_array[0] == 'hentaihaven.org':
             print('hentaihaven')
             file_status = HentaiHaven_org.Run(url, url_array).file_status
