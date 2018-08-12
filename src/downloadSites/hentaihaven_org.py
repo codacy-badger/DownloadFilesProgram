@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
 from . import tiwi_kiwi
-from .AccessSite.OpenHTML import AccessPage
+from .helper import AccessPage
 
 importlib.reload(sys)
 SeqFlag = True

@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 import numpy as np
 
 
-from .AccessSite.OpenHTML import AccessPage
+from .helper import AccessPage
 
 
 class Run(object):

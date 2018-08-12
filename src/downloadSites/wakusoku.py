@@ -4,7 +4,7 @@ import datetime
 
 from bs4 import BeautifulSoup
 
-from .AccessSite.OpenHTML import AccessPage
+from .helper import AccessPage
 
 
 SeqFlag = True

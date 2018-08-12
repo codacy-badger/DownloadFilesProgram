@@ -4,7 +4,7 @@ import time
 
 from bs4 import BeautifulSoup
 
-from .AccessSite.OpenHTML import AccessPage
+from .helper import AccessPage
 
 
 class Run(object):

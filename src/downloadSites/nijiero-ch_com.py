@@ -3,7 +3,7 @@ import datetime
 import os
 import re
 
-from .AccessSite.OpenHTML import SoupURL
+from .helper import SoupURL
 
 
 SeqFlag = True

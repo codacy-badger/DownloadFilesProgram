@@ -8,13 +8,10 @@ from selenium import webdriver
 
 class AccessPage(object):
     """docstring for AccessPage"""
-    def __init__(self, url, browser=False):
+    def __init__(self, url):
         super(AccessPage, self).__init__()
         self.html = ''
-        if browser:
-            self.html, self.driver = self.get_html_by_browser(url)
-        else:
-            self.html = self.get_html(url)
+        self.html = self.get_html(url)
 
     def get_html(self, url):
         if 'SEQUENCE' in url:
@@ -30,7 +27,7 @@ class AccessPage(object):
         except:
             raise
 
-    def get_html_by_browser(self, url):
+    def get_html_by_phantomjs(self, url):
         if 'SEQUENCE' in url:
             return ''
 
@@ -40,7 +37,7 @@ class AccessPage(object):
         driver.get(url)
         html = driver.page_source.encode('utf-8')
         # access page
-        return html, driver
+        return html
 
 
 class SoupURL(object):
@@ -50,7 +47,7 @@ class SoupURL(object):
         self.s = self.get_soup(url)
 
     def get_soup(self, url):
-        # print(url)
+        # print url
         x = AccessPage(url)
-        soup = BeautifulSoup(x.content, 'html.parser')
+        soup = BeautifulSoup(x.html)
         return soup
