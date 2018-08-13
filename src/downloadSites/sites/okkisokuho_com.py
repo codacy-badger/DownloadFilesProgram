@@ -3,6 +3,7 @@ import datetime
 import os
 import re
 
+from . import _helper
 from ._helper import SoupURL
 
 
@@ -70,15 +71,12 @@ class Media(object):
             raise
 
     def get_media_url(self, soup):
-        try:
-            div_tags = soup.find('div', attrs={'class': 'entry_text'})
-            img_tags = div_tags.findAll('img', attrs={'alt': u'エロ画像'})
-        except:     # this type is advertisement
-            raise
+        div_tag = soup.find('div', attrs={'class': 'post_in'})
+        img_tags = div_tag.findAll('img', attrs={'alt': u'エロ画像'})
         x = []
         cnt = 0
         for i in img_tags:
-            url = i.parent['href']
+            url = i['src']
 
             title = str(cnt).zfill(3) + url[-4:]
             cnt += 1
