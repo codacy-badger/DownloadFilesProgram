@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import datetime
 
+from . import _helper
 from ._helper import SoupURL
 
 
 SeqFlag = True
-
 LimitTime = None
 
 
@@ -117,7 +117,7 @@ class Index(object):
             if a['href'] is not None:
                 x += [{
                     'title': a['title'],
-                    'href': a['href'].encode('utf-8')
+                    'href': a['href']
                 }]
         return x
 
@@ -128,7 +128,7 @@ class Sequence(object):
         super(Sequence, self).__init__()
         # init
         global SeqFlag
-        stop_time = self.get_limit()
+        stop_time = _helper.get_limit_time(LimitTime)
         i = 1
         self.pref = []
         # view time now
@@ -142,7 +142,7 @@ class Sequence(object):
         del url_array[-1]
         while True:
             print('Scaning page:' + str(i) + '...')
-            url = 'http://' + '/'.join(url_array) + '/' + str(i)
+            url = 'http://{}/page/{}'.format('/'.join(url_array), i)
             soup = SoupURL(url).s
             self.pref += Index(soup).pref
             i += 1
@@ -151,25 +151,6 @@ class Sequence(object):
         # Finish
         SeqFlag = True
         print("")
-
-    def get_limit(self):
-        global LimitTime
-        # check LimitTime
-        limit_day = LimitTime
-        if limit_day is None:
-            print('Till when?')
-            print('ex. YYYY/MM/DD hh:mm')
-            limit_day = input('-> ')
-        # check Str Type
-        while True:
-            LimitTime = limit_day
-            limit_day = limit_day.replace(' ', '')
-            limit_day = limit_day.replace('/', '').replace(':', '')
-            if len(limit_day) == 12:
-                return int(limit_day)
-            else:
-                print('Oops!')
-                limit_day = input('-> ')
 
     def get_files_day(self, soup):
         li_tag = soup.findAll('li', attrs={'class': 'cal'})

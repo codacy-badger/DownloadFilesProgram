@@ -9,12 +9,31 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 
 
+def get_limit_time(time_string):
+    limit_day = time_string
+    if limit_day is None:
+        print('Till when?')
+        print('ex. YYYY/MM/DD')
+        limit_day = input('-> ')
+    # check Str Type
+    while True:
+        LimitTime = limit_day
+        limit_day = limit_day.replace(' ', '')
+        limit_day = limit_day.replace('/', '')
+        limit_day = limit_day.replace(':', '')
+        limit_day += '0000'
+        if len(limit_day) == 12:
+            return int(limit_day)
+        else:
+            print('Oops!')
+            limit_day = input('-> ')
+
+
 def convert_url(url):
     regex = r'[^\x00-\x7F]'
     matchedList = re.findall(regex, url)
     for m in matchedList:
         url = url.replace(m, urllib.parse.quote_plus(m, encoding = "utf-8"))
-    print(url)
     return url
 
 
@@ -35,6 +54,7 @@ class AccessPage(object):
             headers = {
                 'User-Agent':  'Mozilla/5.0'
             }
+            url = convert_url(url)
             r = http.request('GET', url, headers=headers)
             # access page
             return r.data
