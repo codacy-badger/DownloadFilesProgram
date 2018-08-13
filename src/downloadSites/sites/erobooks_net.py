@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 import os
+import re
 
 from ._helper import SoupURL
 
@@ -18,10 +19,10 @@ class Run(object):
         global LimitTime
         LimitTime = limit
         # get type and soup
-        st = SiteType(url_array)
+        site_type = self._get_site_type(url_array)
         soup = SoupURL(url)
-        urls = self.get_urls(st.type, soup.s, url_array)
-        self.file_status = {'urls': urls, 'dir': 'h_pic_place'}
+        urls = self.get_urls(site_type, soup.s, url_array)
+        self.file_status = {'urls': urls, 'dir': 'h_manga_place'}
 
     def get_urls(self, url_type, soup, url_array):
         if url_type == 'media':
@@ -34,14 +35,7 @@ class Run(object):
             list_url = []
         return list_url
 
-
-class SiteType(object):
-    """docstring for SiteType"""
-    def __init__(self, url_array):
-        super(SiteType, self).__init__()
-        self.type = self.get_type(url_array)
-
-    def get_type(self, url_array):
+    def _get_site_type(self, url_array):
         global SeqFlag
         if url_array[1] == 'archives':
             url_type = 'media'   # media url
@@ -62,29 +56,38 @@ class Media(object):
         self.pref = self.get_media_url(soup)
 
     def get_dir_name(self, soup):
-        try:
-            title = soup.title.string.split(u'｜')[0].strip()
-            title = title.replace('/', '_')
-            return title
-        except:
-            raise
+        # get book title
+        title = soup.title.string
+        pattern = re.compile(r'【(.+)】')
+        title = pattern.search(title).group(1)
+        title = title.replace('/', '_')
+        # get author name
+        span = soup.find_all('span', attrs={'class': 'info'})[1]
+        author = span.a['title']
+        # generate dir_name
+        dir_name = '[{}] {}'.format(author, title)
+        return dir_name
 
     def get_media_url(self, soup):
-        try:
-            div_tags = soup.find(
-                'div', attrs={'class': 'article-body'}
-            )
-            img_tags = div_tags.findAll('img')
-        except:     # this type is advertisement
-            raise
-        x = []
+        div_tag = soup.find('div', attrs={'id': 'article-body'})
+
+        # first pic
         cnt = 0
+        div = div_tag.find('div', attrs={'class': 'first_pic inner_box'})
+        img = div.find('img')
+        url = img['src']
+        title = str(cnt).zfill(3) + '.' + url.split('.')[-1]
+        x = [{
+            'title': os.path.join(self.parent, title),
+            'href': url
+        }]
+
+        # others
+        cnt = 1
+        div = div_tag.findAll('div', attrs={'class': 'inner_box'})[1]
+        img_tags = div.findAll('img')
         for i in img_tags:
-            try:
-                _url = i['srcset'].split(',')[-1].strip()
-            except:
-                _url = i['src'].strip()
-            url = 'http:' + _url.split(' ')[0].strip()
+            url = i['src']
 
             title = str(cnt).zfill(3) + '.' + url.split('.')[-1]
             cnt += 1

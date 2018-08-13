@@ -6,7 +6,7 @@ from .sites import redtube_com   # NOQA
 from .sites import moeimg_net    # NOQA
 from .sites import muchaero_net  # NOQA
 from .sites import nijibondo_com # NOQA
-from .sites import nizigazo_net  # NOQA
+from .sites import erobooks_net  # NOQA
 from .sites import pornhub_com   # NOQA
 from .sites import okkisokuho_com    # NOQA
 from .sites import xnxx_com  # NOQA
@@ -54,9 +54,9 @@ class DownloadList(object):
         elif url_array[0] == 'muchaero.net':
             print('muchaero')
             file_status = muchaero_net.Run(url, url_array, limit).file_status
-        elif url_array[0] == 'nizigazo.net':
-            print('nizigazo')
-            file_status = nizigazo_net.Run(url, url_array, limit).file_status
+        elif url_array[0] == 'erobooks.net':
+            print('erobooks')
+            file_status = erobooks_net.Run(url, url_array, limit).file_status
         elif url_array[0] == 'nijibondo.com':
             print('nijibondo')
             file_status = nijibondo_com.Run(url, url_array, limit).file_status
