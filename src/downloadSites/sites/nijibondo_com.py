@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-import datetime
 import os
+import datetime
 
+from . import _helper
 from ._helper import SoupURL
 
 
@@ -18,9 +19,9 @@ class Run(object):
         global LimitTime
         LimitTime = limit
         # get type and soup
-        st = SiteType(url_array)
+        url_type = self._get_site_type(url_array)
         soup = SoupURL(url)
-        urls = self.get_urls(st.type, soup.s, url_array)
+        urls = self.get_urls(url_type, soup.s, url_array)
         self.file_status = {'urls': urls, 'dir': 'h_pic_place'}
 
     def get_urls(self, url_type, soup, url_array):
@@ -34,16 +35,9 @@ class Run(object):
             list_url = []
         return list_url
 
-
-class SiteType(object):
-    """docstring for SiteType"""
-    def __init__(self, url_array):
-        super(SiteType, self).__init__()
-        self.type = self.get_type(url_array)
-
-    def get_type(self, url_array):
+    def _get_site_type(self, url_array):
         global SeqFlag
-        if len(url_array) == 2:
+        if len(url_array) == 3:
             url_type = 'media'   # media url
         elif url_array[-1] == 'SEQUENCE':
             if SeqFlag:
@@ -70,20 +64,12 @@ class Media(object):
             raise
 
     def get_media_url(self, soup):
-        try:
-            div_tags = soup.find('div', attrs={'id': 'the-content'})
-            img_tags = div_tags.findAll('img')
-        except:     # this type is advertisement
-            raise
+        div_tag = soup.find('div', attrs={'id': 'the-content'})
+        a_tags = div_tag.findAll('a')
         x = []
         cnt = 0
-        for i in img_tags:
-            try:
-                _url = i['srcset'].split(',')[-1].strip()
-            except:
-                _url = i['src'].strip()
-            url = _url.split(' ')[0].strip()
-
+        for a in a_tags:
+            url = a['href']
             title = str(cnt).zfill(3) + url[-4:]
             cnt += 1
             x += [{
@@ -112,16 +98,17 @@ class Index(object):
         return buf
 
     def get_media_url(self, soup):
-        h2_tags = soup.findAll('h2')
+        div = soup.find('div', attrs={'id': 'list'})
+        h2_tags = div.findAll('h2')
+
         # get title and url
-        del h2_tags[0]
         x = []
         for i in h2_tags:
             a = i.a
             if a['href'] is not None:
                 x += [{
-                    'title': a.string.encode('utf-8'),
-                    'href': a['href'].encode('utf-8')
+                    'title': a.string,
+                    'href': a['href']
                 }]
         return x
 
@@ -132,7 +119,8 @@ class Sequence(object):
         super(Sequence, self).__init__()
         # init
         global SeqFlag
-        stop_time = self.get_limit()
+        global LimitTime
+        stop_time = _helper.get_limit_time(LimitTime)
         i = 1
         self.pref = []
         # view time now
@@ -146,7 +134,7 @@ class Sequence(object):
         del url_array[-1]
         while True:
             print('Scaning page:' + str(i) + '...')
-            url = 'http://' + '/'.join(url_array) + '/' + str(i)
+            url = 'http://{}/page/{}'.format('/'.join(url_array), i)
             soup = SoupURL(url).s
             self.pref += Index(soup).pref
             i += 1
@@ -156,27 +144,8 @@ class Sequence(object):
         SeqFlag = True
         print("")
 
-    def get_limit(self):
-        global LimitTime
-        # check LimitTime
-        limit_day = LimitTime
-        if limit_day is None:
-            print('Till when?')
-            print('ex. YYYY/MM/DD hh:mm')
-            limit_day = input('-> ')
-        # check Str Type
-        while True:
-            LimitTime = limit_day
-            limit_day = limit_day.replace(' ', '')
-            limit_day = limit_day.replace('/', '').replace(':', '')
-            if len(limit_day) == 12:
-                return int(limit_day)
-            else:
-                print('Oops!')
-                limit_day = input('-> ')
-
     def get_files_day(self, soup):
-        span_tags = soup.findAll('span', attrs={'class': 'published'})
+        span_tags = soup.body.find_all('span', attrs={'class': 'published'})
         times = []
         # get times
         for x in span_tags:
