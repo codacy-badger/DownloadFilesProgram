@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import datetime
 
 from ._helper import SoupURL
@@ -69,24 +70,19 @@ class Media(object):
             raise
 
     def get_media_url(self, soup):
-        try:
-            div_tags = soup.find(
-                'div', attrs={'class': 'entry-content'}
-            )
-            img_tag = div_tags.findAll('img')
-        except:     # this type is advertisement
-            raise
+        div_tag = soup.find('div', attrs={'id': 'the-content'})
+        img_tags = div_tag.findAll('img')
+
         x = []
         cnt = 0
-        for i in range(0, len(img_tag), 2):
-            url = img_tag[i]['data-lazy-src']
-            if '.jpg' in url:
-                title = str(cnt).zfill(3) + url[-4:]
-                cnt += 1
-                x += [{
-                    'title': self.parent + '/' + title,
-                    'href': url
-                }]
+        for img in img_tags:
+            url = img['data-src']
+            title = str(cnt).zfill(3) + url[-4:]
+            x += [{
+                'title': os.path.join(self.parent, title),
+                'href': url
+            }]
+            cnt += 1
         return x
 
 
@@ -117,8 +113,8 @@ class Index(object):
             a = i.a
             if a['href'] is not None:
                 x += [{
-                    'title': a.string.encode('utf-8'),
-                    'href': a['href'].encode('utf-8')
+                    'title': a.string,
+                    'href': a['href']
                 }]
         return x
 
