@@ -124,7 +124,7 @@ class Sequence(object):
         super(Sequence, self).__init__()
         # init
         global SeqFlag
-        stop_time = self.get_limit()
+        stop_time = _helper.get_limit_time(LimitTime)
         i = 1
         self.pref = []
         # view time now
