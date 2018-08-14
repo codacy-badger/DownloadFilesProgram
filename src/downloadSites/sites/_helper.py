@@ -74,6 +74,12 @@ class AccessPage(object):
         return html
 
 
+def get_soup(url):
+    x = AccessPage(url)
+    soup = BeautifulSoup(x.html, "html.parser")
+    return soup
+
+
 class SoupURL(object):
     """docstring for SoupURL"""
     def __init__(self, url):

@@ -17,12 +17,12 @@ class Run(object):
         global LimitTime
         LimitTime = limit
         # get type and soup
-        st = SiteType(url_array)
+        site_type = self._get_type(url_array)
         soup = SoupURL(url)
-        urls = self.get_urls(st.type, soup.s, url_array)
+        urls = self._get_urls(site_type, soup.s, url_array)
         self.file_status = {'urls': urls, 'dir': 'h_pic_place'}
 
-    def get_urls(self, url_type, soup, url_array):
+    def _get_urls(self, url_type, soup, url_array):
         if url_type == 'media':
             list_url = Media(soup).pref
         elif url_type == 'index':
@@ -33,14 +33,7 @@ class Run(object):
             list_url = []
         return list_url
 
-
-class SiteType(object):
-    """docstring for SiteType"""
-    def __init__(self, url_array):
-        super(SiteType, self).__init__()
-        self.type = self.get_type(url_array)
-
-    def get_type(self, url_array):
+    def _get_type(self, url_array):
         global SeqFlag
         if len(url_array) == 2:
             url_type = 'media'   # media url

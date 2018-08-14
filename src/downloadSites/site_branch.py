@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from .sites import xbooks_to     # NOQA
-from .sites import hentaihaven_org   # NOQA
-from .sites import sugumiru18_com    # NOQA
+# from .sites import hentaihaven_org   # NOQA
+# from .sites import sugumiru18_com    # NOQA
 from .sites import redtube_com   # NOQA
 from .sites import moeimg_net    # NOQA
 from .sites import muchaero_net  # NOQA

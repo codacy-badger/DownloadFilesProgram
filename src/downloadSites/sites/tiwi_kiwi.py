@@ -2,10 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import re
-
-from bs4 import BeautifulSoup
-
 import numpy as np
+from bs4 import BeautifulSoup
 
 
 from ._helper import AccessPage
@@ -17,42 +15,23 @@ class Run(object):
         super(Run, self).__init__()
         self.urls = []
         # get type and soup
-        st = SiteType(url_array)
-        soup = SoupURL(url)
-        self.urls = self.get_urls(st.type, soup.s)
+        site_type = self._get_type(url_array)
+        soup = _helper.get_soup(url)
+        self.urls = self._get_urls(site_type, soup)
 
-    def get_urls(self, url_type, soup):
+    def _get_urls(self, url_type, soup):
         if url_type == 'media':
             list_url = Media(soup).pref
         else:
             list_url = []
         return list_url
 
-
-class SiteType(object):
-    """docstring for SiteType"""
-    def __init__(self, url_array):
-        super(SiteType, self).__init__()
-        self.type = self.get_type(url_array)
-
-    def get_type(self, url_array):
+    def _get_type(self, url_array):
         if len(url_array) == 2:
             url_type = 'media'   # media url
         else:
             url_type = None
         return url_type
-
-
-class SoupURL(object):
-    """docstring for SoupURL"""
-    def __init__(self, url):
-        super(SoupURL, self).__init__()
-        self.s = self.get_soup(url)
-
-    def get_soup(self, url):
-        x = AccessPage(url)
-        soup = BeautifulSoup(x.html, "html.parser")
-        return soup
 
 
 class Media(object):
@@ -100,7 +79,7 @@ class Media(object):
 
     def get_direct_download_link(self, url):
         try:
-            soup = SoupURL(url).s
+            soup = _helper.get_soup(url)
             media_url = soup.body.find(
                 'a', attrs={'class': 'btn green'}
             )['href']

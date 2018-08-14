@@ -2,7 +2,7 @@
 
 import datetime
 
-from ._helper import SoupURL
+from . import _helper
 
 
 SeqFlag = True
@@ -17,12 +17,12 @@ class Run(object):
         global LimitTime
         LimitTime = limit
         # get type and soup
-        st = SiteType(url_array)
-        soup = SoupURL(url)
-        urls = self.get_urls(st.type, soup.s, url_array)
+        site_type = self._get_type(url_array)
+        soup = _helper.get_soup(url)
+        urls = self._get_urls(site_type, soup, url_array)
         self.file_status = {'urls': urls, 'dir': 'h_pic_place'}
 
-    def get_urls(self, url_type, soup, url_array):
+    def _get_urls(self, url_type, soup, url_array):
         if url_type == 'media':
             list_url = Media(soup).pref
         elif url_type == 'index':
@@ -33,14 +33,7 @@ class Run(object):
             list_url = []
         return list_url
 
-
-class SiteType(object):
-    """docstring for SiteType"""
-    def __init__(self, url_array):
-        super(SiteType, self).__init__()
-        self.type = self.get_type(url_array)
-
-    def get_type(self, url_array):
+    def _get_type(self, url_array):
         global SeqFlag
         if len(url_array) == 2:
             url_type = 'media'   # media url
@@ -97,12 +90,8 @@ class Index(object):
     def get_pref(self, url_list):
         buf = []
         for x in url_list:
-            soup = SoupURL(x['href']).s
-            try:
-                buf += Media(soup).pref
-            except:
-                print('Error')
-                pass
+            soup = _helper.get_soup(x['href'])
+            buf += Media(soup).pref
         return buf
 
     def get_media_url(self, soup):
@@ -124,6 +113,7 @@ class Sequence(object):
         super(Sequence, self).__init__()
         # init
         global SeqFlag
+        global LimitTime
         stop_time = _helper.get_limit_time(LimitTime)
         i = 1
         self.pref = []
@@ -139,7 +129,7 @@ class Sequence(object):
         while True:
             print('Scaning page:' + str(i) + '...')
             url = 'http://' + '/'.join(url_array) + '/' + str(i)
-            soup = SoupURL(url).s
+            soup = _helper.get_soup(url)
             self.pref += Index(soup).pref
             i += 1
             if self.get_files_day(soup) < stop_time:
@@ -147,25 +137,6 @@ class Sequence(object):
         # Finish
         SeqFlag = True
         print("")
-
-    def get_limit(self):
-        global LimitTime
-        # check LimitTime
-        limit_day = LimitTime
-        if limit_day is None:
-            print('Till when?')
-            print('ex. YYYY/MM/DD hh:mm')
-            limit_day = input('-> ')
-        # check Str Type
-        while True:
-            LimitTime = limit_day
-            limit_day = limit_day.replace(' ', '')
-            limit_day = limit_day.replace('/', '').replace(':', '')
-            if len(limit_day) == 12:
-                return int(limit_day)
-            else:
-                print('Oops!')
-                limit_day = input('-> ')
 
     def get_files_day(self, soup):
         a_tag = soup.findAll('a', attrs={'rel': 'bookmark'})

@@ -4,11 +4,11 @@ import importlib
 import re
 import sys
 from urllib.parse import urlparse
-
 from bs4 import BeautifulSoup
 
 from . import tiwi_kiwi
-from ._helper import AccessPage
+from . import _helper
+
 
 importlib.reload(sys)
 SeqFlag = True
@@ -20,12 +20,12 @@ class Run(object):
         super(Run, self).__init__()
         self.urls = []
         # get type and soup
-        st = SiteType(url_array)
-        soup = SoupURL(url)
-        urls = self.get_urls(st.type, soup.soup)
+        site_type = self._get_type(url_array)
+        soup = _helper.get_soup(url)
+        urls = self._get_urls(site_type, soup)
         self.file_status = {'urls': urls, 'dir': 'h_anime_place'}
 
-    def get_urls(self, url_type, soup):
+    def _get_urls(self, url_type, soup):
         if url_type == 'media':
             list_url = Media(soup).pref
         elif url_type == 'index':
@@ -34,31 +34,12 @@ class Run(object):
             list_url = []
         return list_url
 
-
-class SiteType(object):
-    """docstring for SiteType"""
-    def __init__(self, url_array):
-        super(SiteType, self).__init__()
-        self.type = self.get_type(url_array)
-
-    def get_type(self, url_array):
+    def _get_type(self, url_array):
         if 'episode' in url_array[1]:
             url_type = 'media'
         else:
             url_type = 'index'
         return url_type
-
-
-class SoupURL(object):
-    """docstring for SoupURL"""
-    def __init__(self, url):
-        super(SoupURL, self).__init__()
-        self.soup = self.get_soup(url)
-
-    def get_soup(self, url):
-        x = AccessPage(url)
-        soup = BeautifulSoup(x.html, "html.parser")
-        return soup
 
 
 # === Single Download ===
@@ -138,7 +119,7 @@ class Index(object):
         for x in urls:
             try:
                 l = {}
-                soup = SoupURL(x).soup
+                soup = _helper.get_soup(x).soup
                 m = Media(soup)
                 l['title'] = m.pref[0]['title']
                 l['href'] = m.pref[0]['href'].encode("utf8")

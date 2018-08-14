@@ -5,7 +5,7 @@ from html.parser import HTMLParser
 
 from bs4 import BeautifulSoup
 
-from ._helper import AccessPage
+from . import _helper
 
 
 class Run(object):
@@ -14,43 +14,24 @@ class Run(object):
         super(Run, self).__init__()
         self.urls = []
         # get type and soup
-        st = SiteType(url_array)
-        soup = SoupURL(url)
-        urls = self.get_urls(st.type, soup.s)
+        site_type = self._get_type(url_array)
+        soup = _helper.get_soup(url)
+        urls = self._get_urls(site_type, soup)
         self.file_status = {'urls': urls, 'dir': 'h_video_place'}
 
-    def get_urls(self, url_type, soup):
+    def _get_urls(self, url_type, soup):
         if url_type == 'media':
             list_url = Media(soup).pref
         else:
             list_url = []
         return list_url
 
-
-class SiteType(object):
-    """docstring for SiteType"""
-    def __init__(self, url_array):
-        super(SiteType, self).__init__()
-        self.type = self.get_type(url_array)
-
-    def get_type(self, url_array):
+    def _get_type(self, url_array):
         if 'video' in url_array[1]:
             url_type = 'media'   # media url
         else:
             url_type = None
         return url_type
-
-
-class SoupURL(object):
-    """docstring for SoupURL"""
-    def __init__(self, url):
-        super(SoupURL, self).__init__()
-        self.s = self.get_soup(url)
-
-    def get_soup(self, url):
-        x = AccessPage(url)
-        soup = BeautifulSoup(x.html, "html.parser")
-        return soup
 
 
 class Media(object):
@@ -72,22 +53,19 @@ class Media(object):
         return title
 
     def get_file_url(self, soup):
-        try:
-            js = soup.find('div', attrs={'id': 'video-player-bg'})
-            scr = js.findAll('script')
-            scr_string = ''
-            scr = [str(i.string) for i in scr]
-            scr = '\n'.join(scr)
-            scr_string = scr.replace('\\', '')
+        js = soup.find('div', attrs={'id': 'video-player-bg'})
+        scr = js.findAll('script')
+        scr_string = ''
+        scr = [str(i.string) for i in scr]
+        scr = '\n'.join(scr)
+        scr_string = scr.replace('\\', '')
 
-            # get functions for video url. ()で囲まれた部分だけ返す
-            pattern = r"html5player\.setVideoUrl.+(http.+)'\);"
-            m = re.findall(pattern, scr_string)
-            url = m[-1]     # get only high quarity video url
-            url = HTMLParser.HTMLParser().unescape(url)    # fix encoding bug
-            return url
-        except:
-            raise
+        # get functions for video url. ()で囲まれた部分だけ返す
+        pattern = r"html5player\.setVideoUrl.+(http.+)'\);"
+        m = re.findall(pattern, scr_string)
+        url = m[-1]     # get only high quarity video url
+        url = HTMLParser.HTMLParser().unescape(url)    # fix encoding bug
+        return url
 
 
 # === test code ===

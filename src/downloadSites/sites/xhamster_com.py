@@ -4,7 +4,7 @@ import re
 
 from bs4 import BeautifulSoup
 
-from ._helper import AccessPage
+from . import _helper
 
 
 class Run(object):
@@ -13,43 +13,24 @@ class Run(object):
         super(Run, self).__init__()
         self.urls = []
         # get type and soup
-        st = SiteType(url_array)
-        soup = SoupURL(url)
-        urls = self.get_urls(st.type, soup.s)
+        site_type = self._get_type(url_array)
+        soup = _helper.get_soup(url)
+        urls = self._get_urls(site_type, soup)
         self.file_status = {'urls': urls, 'dir': 'h_video_place'}
 
-    def get_urls(self, url_type, soup):
+    def _get_urls(self, url_type, soup):
         if url_type == 'media':
             list_url = Media(soup).pref
         else:
             list_url = []
         return list_url
 
-
-class SiteType(object):
-    """docstring for SiteType"""
-    def __init__(self, url_array):
-        super(SiteType, self).__init__()
-        self.type = self.get_type(url_array)
-
-    def get_type(self, url_array):
+    def _get_type(self, url_array):
         if 'movies' in url_array[1]:
             url_type = 'media'   # media url
         else:
             url_type = None
         return url_type
-
-
-class SoupURL(object):
-    """docstring for SoupURL"""
-    def __init__(self, url):
-        super(SoupURL, self).__init__()
-        self.s = self.get_soup(url)
-
-    def get_soup(self, url):
-        x = AccessPage(url)
-        soup = BeautifulSoup(x.html, "html.parser")
-        return soup
 
 
 class Media(object):
@@ -67,17 +48,14 @@ class Media(object):
         return title
 
     def get_file_url(self, soup):
-        try:
-            # get script
-            scr = soup.find('script', attrs={'type': 'text/javascript'})
-            scr_string = scr.string.replace('\\', '')
-            # re
-            pattern = re.compile('":\["(.+)"\]}')
-            m = pattern.search(scr_string)
-            media_url = m.group(1).split('"')[-1]
-            return media_url
-        except:
-            raise
+        # get script
+        scr = soup.find('script', attrs={'type': 'text/javascript'})
+        scr_string = scr.string.replace('\\', '')
+        # re
+        pattern = re.compile('":\["(.+)"\]}')
+        m = pattern.search(scr_string)
+        media_url = m.group(1).split('"')[-1]
+        return media_url
 
 
 # === test code ===
