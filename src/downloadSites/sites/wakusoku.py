@@ -55,13 +55,10 @@ class Media(object):
         self.pref = self.get_media_url(soup)
 
     def get_dir_name(self, soup):
-        try:
-            ds = u'わくてか速報 :'
-            title = soup.title.string.strip(ds).split('-')[0].strip()
-            title = title.replace('/', '_')
-            return title
-        except:
-            raise
+        ds = u'わくてか速報 :'
+        title = soup.title.string.strip(ds).split('-')[0].strip()
+        title = title.replace('/', '_')
+        return title
 
     def get_media_url(self, soup):
         lib = []

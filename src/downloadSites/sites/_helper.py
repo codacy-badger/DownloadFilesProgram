@@ -52,20 +52,18 @@ class AccessPage(object):
     def _get_html(self, url):
         if 'SEQUENCE' in url:
             return ''
-        try:
-            http = urllib3.PoolManager(
-                cert_reqs='CERT_REQUIRED',
-                ca_certs=certifi.where())
-            # set user
-            headers = {
-                'User-Agent':  'Mozilla/5.0'
-            }
-            url = convert_url(url)
-            r = http.request('GET', url, headers=headers)
-            # access page
-            return r.data
-        except:
-            raise
+
+        http = urllib3.PoolManager(
+            cert_reqs='CERT_REQUIRED',
+            ca_certs=certifi.where())
+        # set user
+        headers = {
+            'User-Agent':  'Mozilla/5.0'
+        }
+        url = convert_url(url)
+        r = http.request('GET', url, headers=headers)
+        # access page
+        return r.data
 
     def get_html_by_phantomjs(self, url):
         if 'SEQUENCE' in url:

@@ -109,11 +109,7 @@ class Index(object):
         buf = []
         for x in url_list:
             soup = _helper.get_soup(x['href']).s
-            try:
-                buf += Media(soup).pref
-            except:
-                print('Error')
-                pass
+            buf += Media(soup).pref
         return buf
 
     def get_media_url(self, soup):

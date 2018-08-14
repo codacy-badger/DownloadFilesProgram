@@ -53,20 +53,17 @@ class Media(object):
         return title
 
     def get_file_url(self, soup):
-        try:
-            js = soup.find('div', attrs={'id': 'player'})
-            scr = js.find('script')
-            scr_string = scr.string
+        js = soup.find('div', attrs={'id': 'player'})
+        scr = js.find('script')
+        scr_string = scr.string
 
-            # pattern = r'\"https:\/\/.+\.mp4.+\"'
-            pattern = re.compile(
-                r'(?<="videoUrl":")https:\\/\\/.+\.mp4.+?(?="})')
-            m = pattern.search(scr_string, re.DOTALL).group(0)
-            media_url = m.split('"')[0]
-            media_url = media_url.replace('\/', '/')
-            return media_url
-        except:
-            raise
+        # pattern = r'\"https:\/\/.+\.mp4.+\"'
+        pattern = re.compile(
+            r'(?<="videoUrl":")https:\\/\\/.+\.mp4.+?(?="})')
+        m = pattern.search(scr_string, re.DOTALL).group(0)
+        media_url = m.split('"')[0]
+        media_url = media_url.replace('\/', '/')
+        return media_url
 
 
 # === test code ===

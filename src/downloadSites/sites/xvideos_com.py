@@ -54,22 +54,19 @@ class Media(object):
         return title
 
     def get_file_url(self, soup):
-        try:
-            js = soup.find('div', attrs={'id': 'video-player-bg'})
-            scr = js.findAll('script')
-            scr_string = ''
-            scr = [str(i.string) for i in scr]
-            scr = '\n'.join(scr)
-            scr_string = scr.replace('\\', '')
+        js = soup.find('div', attrs={'id': 'video-player-bg'})
+        scr = js.findAll('script')
+        scr_string = ''
+        scr = [str(i.string) for i in scr]
+        scr = '\n'.join(scr)
+        scr_string = scr.replace('\\', '')
 
-            # get functions for video url. ()で囲まれた部分だけ返す
-            pattern = r"html5player\.setVideoUrl.+(http.+)'\);"
-            m = re.findall(pattern, scr_string)
-            url = m[-1]     # get only high quarity video url
-            url = HTMLParser.HTMLParser().unescape(url)    # fix encoding bug
-            return url
-        except:
-            raise
+        # get functions for video url. ()で囲まれた部分だけ返す
+        pattern = r"html5player\.setVideoUrl.+(http.+)'\);"
+        m = re.findall(pattern, scr_string)
+        url = m[-1]     # get only high quarity video url
+        url = HTMLParser.HTMLParser().unescape(url)    # fix encoding bug
+        return url
 
 
 # === test code ===

@@ -53,20 +53,14 @@ class Media(object):
         self.pref = self.get_media_url(soup)
 
     def get_dir_name(self, soup):
-        try:
-            title = soup.title.string.split('|')[0].strip()
-            title = title.replace('/', '_')
-            return title
-        except:
-            raise
+        title = soup.title.string.split('|')[0].strip()
+        title = title.replace('/', '_')
+        return title
 
     def get_media_url(self, soup):
-        try:
-            img_tag = soup.findAll(
-                'img', attrs={'class': 'thumbnail_image'}
-            )
-        except:     # this type is advertisement
-            raise
+        img_tag = soup.findAll(
+            'img', attrs={'class': 'thumbnail_image'}
+        )
         x = []
         cnt = 0
         for i in img_tag:
@@ -93,11 +87,8 @@ class Index(object):
         buf = []
         for x in url_list:
             soup = _helper.get_soup(x['href'])
-            try:
-                buf += Media(soup).pref
-            except:
-                print('Error')
-                pass
+
+            buf += Media(soup).pref
         return buf
 
     def get_media_url(self, soup):
