@@ -47,21 +47,19 @@ class Media(object):
         return title
 
     def get_file_url(self, soup):
-        try:
-            # get script
-            script = soup.select_one('#redtube-player > script:nth-of-type(2)')
-            scr_string = script.string.replace('\\', '')
-            # re
-            strings = scr_string.split('"videoUrl":"')[1:]
-            pattern = re.compile(r'(http.+)"\}')
-            urls = []
-            for s in strings:
-                m = pattern.search(s)
-                urls.append(m.group(1))
-            media_url = urls[0]
-            return media_url
-        except:
-            raise
+        # get script
+        script = soup.select_one('#redtube-player > script:nth-of-type(2)')
+        scr_string = script.string.replace('\\', '')
+        # re
+        strings = scr_string.split('"videoUrl":"')[1:]
+        pattern = re.compile(r'(http.+)"\}')
+        urls = []
+        for s in strings:
+            m = pattern.search(s)
+            urls.append(m.group(1))
+        media_url = urls[0]
+        return media_url
+
 
 
 # === test code ===

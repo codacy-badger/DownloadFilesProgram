@@ -3,7 +3,7 @@ import datetime
 import os
 import re
 
-from ._helper import SoupURL
+from . import _helper
 
 
 SeqFlag = True
@@ -20,11 +20,11 @@ class Run(object):
         LimitTime = limit
         # get type and soup
         site_type = self._get_site_type(url_array)
-        soup = SoupURL(url)
-        urls = self.get_urls(site_type, soup.s, url_array)
+        soup = _helper.get_soup(url)
+        urls = self._get_urls(site_type, soup, url_array)
         self.file_status = {'urls': urls, 'dir': 'h_manga_place'}
 
-    def get_urls(self, url_type, soup, url_array):
+    def _get_urls(self, url_type, soup, url_array):
         if url_type == 'media':
             list_url = Media(soup).pref
         elif url_type == 'index':
@@ -108,7 +108,7 @@ class Index(object):
     def get_pref(self, url_list):
         buf = []
         for x in url_list:
-            soup = SoupURL(x['href']).s
+            soup = _helper.get_soup(x['href']).s
             try:
                 buf += Media(soup).pref
             except:
@@ -137,7 +137,8 @@ class Sequence(object):
         super(Sequence, self).__init__()
         # init
         global SeqFlag
-        # stop_time = _helper.get_limit_time(LimitTime)
+        global LimitTime
+        stop_time = _helper.get_limit_time(LimitTime)
         i = 1
         self.pref = []
         # view time now
@@ -154,7 +155,7 @@ class Sequence(object):
         for i in range(1, 4):
             print('Scaning page:' + str(i) + '...')
             url = 'http://' + '/'.join(url_array) + '/' + str(i)
-            soup = SoupURL(url).s
+            soup = _helper.get_soup(url).s
             self.pref += Index(soup).pref
             # i += 1
             # if self.get_files_day(soup) < stop_time:
@@ -162,25 +163,6 @@ class Sequence(object):
         # Finish
         SeqFlag = True
         print("")
-
-    def get_limit(self):
-        global LimitTime
-        # check LimitTime
-        limit_day = LimitTime
-        if limit_day is None:
-            print('Till when?')
-            print('ex. YYYY/MM/DD hh:mm')
-            limit_day = input('-> ')
-        # check Str Type
-        while True:
-            LimitTime = limit_day
-            limit_day = limit_day.replace(' ', '')
-            limit_day = limit_day.replace('/', '').replace(':', '')
-            if len(limit_day) == 12:
-                return int(limit_day)
-            else:
-                print('Oops!')
-                limit_day = input('-> ')
 
     def get_files_day(self, soup):
         li_tag = soup.findAll('li', attrs={'class': 'cal'})

@@ -3,7 +3,6 @@ import os
 import datetime
 
 from . import _helper
-from ._helper import SoupURL
 
 
 SeqFlag = True
@@ -20,7 +19,7 @@ class Run(object):
         LimitTime = limit
         # get type and soup
         url_type = self._get_site_type(url_array)
-        soup = SoupURL(url)
+        soup = _helper.get_soup(url)
         urls = self.get_urls(url_type, soup.s, url_array)
         self.file_status = {'urls': urls, 'dir': 'h_pic_place'}
 
@@ -89,7 +88,7 @@ class Index(object):
     def get_pref(self, url_list):
         buf = []
         for x in url_list:
-            soup = SoupURL(x['href']).s
+            soup = _helper.get_soup(x['href'])
             try:
                 buf += Media(soup).pref
             except:
@@ -135,7 +134,7 @@ class Sequence(object):
         while True:
             print('Scaning page:' + str(i) + '...')
             url = 'http://{}/page/{}'.format('/'.join(url_array), i)
-            soup = SoupURL(url).s
+            soup = _helper.get_soup(url)
             self.pref += Index(soup).pref
             i += 1
             if self.get_files_day(soup) < stop_time:

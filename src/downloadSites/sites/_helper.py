@@ -37,6 +37,12 @@ def convert_url(url):
     return url
 
 
+def get_soup(url):
+    x = AccessPage(url)
+    soup = BeautifulSoup(x.html, "html.parser")
+    return soup
+
+
 class AccessPage(object):
     """docstring for AccessPage"""
     def __init__(self, url):
@@ -72,22 +78,3 @@ class AccessPage(object):
         html = driver.page_source.encode('utf-8')
         # access page
         return html
-
-
-def get_soup(url):
-    x = AccessPage(url)
-    soup = BeautifulSoup(x.html, "html.parser")
-    return soup
-
-
-class SoupURL(object):
-    """docstring for SoupURL"""
-    def __init__(self, url):
-        super(SoupURL, self).__init__()
-        self.s = self.get_soup(url)
-
-    def get_soup(self, url):
-        # print url
-        x = AccessPage(url)
-        soup = BeautifulSoup(x.html, "html.parser")
-        return soup

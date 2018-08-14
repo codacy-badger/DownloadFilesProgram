@@ -135,7 +135,7 @@ class Sequence(object):
         for i in range(1, 4):
             print('Scaning page:' + str(i) + '...')
             url = 'http://' + '/'.join(url_array) + '/' + str(i)
-            soup = SoupURL(url).s
+            soup = _helper.get_soup(url)
             self.pref += Index(soup).pref
             # i += 1
             # if self.get_files_day(soup) < stop_time:
