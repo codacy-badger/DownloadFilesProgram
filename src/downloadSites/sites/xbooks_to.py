@@ -45,7 +45,7 @@ class Run(object):
             global Title
             url_type = 'media'   # media url
             Title = url_array[-1]
-        elif url_array[2] == 'index':
+        elif url_array[1] == 'search':
             url_type = 'index'   # search result
             if url_array[-1] == 'SEQUENCE':
                 if SeqFlag:
@@ -71,6 +71,7 @@ class Media(object):
         title = soup.title.string
         if title[0:5] == u'COMIC':
             title = u'[雑誌]' + title[5:]
+        title = title.split('│')[0]
         return title + '.zip'
 
     def get_file_url(self, soup):

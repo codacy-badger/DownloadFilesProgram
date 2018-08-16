@@ -18,9 +18,9 @@ class Run(object):
         global LimitTime
         LimitTime = limit
         # get type and soup
-        url_type = self._get_site_type(url_array)
         soup = _helper.get_soup(url)
-        urls = self.get_urls(url_type, soup.s, url_array)
+        url_type = self._get_site_type(url_array)
+        urls = self.get_urls(url_type, soup, url_array)
         self.file_status = {'urls': urls, 'dir': 'h_pic_place'}
 
     def get_urls(self, url_type, soup, url_array):
@@ -55,7 +55,8 @@ class Media(object):
         self.pref = self.get_media_url(soup)
 
     def get_dir_name(self, soup):
-        title = soup.title.string.split(u'｜')[0].strip()
+        title = soup.title.string
+        title = title.split(u'｜')[0].strip()
         title = title.replace('/', '_')
         return title
 

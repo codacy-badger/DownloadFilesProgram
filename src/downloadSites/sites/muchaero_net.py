@@ -19,7 +19,7 @@ class Run(object):
         LimitTime = limit
         # get type and soup
         site_type = self._get_type(url_array)
-        soup = _helper.get_url(url)
+        soup = _helper.get_soup(url)
         urls = self._get_urls(site_type, soup, url_array)
         self.file_status = {'urls': urls, 'dir': 'h_pic_place'}
 
