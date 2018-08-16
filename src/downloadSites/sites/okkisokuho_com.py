@@ -18,9 +18,9 @@ class Run(object):
         global LimitTime
         LimitTime = limit
         # get type and soup
-        site_type = self._get_type(url_array)
         soup = _helper.get_soup(url)
-        urls = self._get_urls(site_type, soup.s, url_array)
+        site_type = self._get_type(url_array)
+        urls = self._get_urls(site_type, soup, url_array)
         self.file_status = {'urls': urls, 'dir': 'h_pic_place'}
 
     def _get_urls(self, url_type, soup, url_array):
@@ -36,7 +36,7 @@ class Run(object):
 
     def _get_type(self, url_array):
         global SeqFlag
-        if 'post' in url_array[-2]:
+        if len(url_array) == 2:
             url_type = 'media'   # media url
         elif url_array[-1] == 'SEQUENCE':
             if SeqFlag:
@@ -60,12 +60,12 @@ class Media(object):
         return title
 
     def get_media_url(self, soup):
-        div_tag = soup.find('div', attrs={'class': 'post_in'})
-        img_tags = div_tag.findAll('img', attrs={'alt': u'エロ画像'})
+        div_tag = soup.find('div', attrs={'class': 'entry_text'})
+        img_tags = div_tag.find_all('img', attrs={'alt': u'エロ画像'})
         x = []
         cnt = 0
         for i in img_tags:
-            url = i['src']
+            url = i.parent['href']
 
             title = str(cnt).zfill(3) + url[-4:]
             cnt += 1
@@ -91,7 +91,7 @@ class Index(object):
         return buf
 
     def get_media_url(self, soup):
-        div_tags = soup.findAll('div', attrs={'class': 'entry_box'})
+        div_tags = soup.find_all('div', attrs={'class': 'entry_box'})
         # get title and url
         x = []
         for i in div_tags:
@@ -154,7 +154,7 @@ class Sequence(object):
                 limit_day = input('-> ')
 
     def get_files_day(self, soup):
-        div_tags = soup.findAll('div', attrs={'class': 'entry_date'})
+        div_tags = soup.find_all('div', attrs={'class': 'entry_date'})
         times = []
         # get times
         for x in div_tags:

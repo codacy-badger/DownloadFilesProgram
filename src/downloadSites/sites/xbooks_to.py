@@ -46,7 +46,6 @@ class Run(object):
             url_type = 'media'   # media url
             Title = url_array[-1]
         elif url_array[1] == 'search':
-            url_type = 'index'   # search result
             if url_array[-1] == 'SEQUENCE':
                 if SeqFlag:
                     SeqFlag = False
