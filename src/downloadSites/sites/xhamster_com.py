@@ -26,10 +26,8 @@ class Run(object):
         return list_url
 
     def _get_type(self, url_array):
-        if 'movies' in url_array[1]:
+        if 'videos' in url_array[1]:
             url_type = 'media'   # media url
-        else:
-            url_type = None
         return url_type
 
 
@@ -44,17 +42,13 @@ class Media(object):
 
     def get_title(self, soup):
         title = soup.find('h1').string.strip()
-        title = re.sub(r'[^(\w\d\-\[\])]', '', title) + '.flv'
+        title = re.sub(r'[^(\w\d\-\[\])]', '', title) + '.mp4'
         return title
 
     def get_file_url(self, soup):
         # get script
-        scr = soup.find('script', attrs={'type': 'text/javascript'})
-        scr_string = scr.string.replace('\\', '')
-        # re
-        pattern = re.compile('":\["(.+)"\]}')
-        m = pattern.search(scr_string)
-        media_url = m.group(1).split('"')[-1]
+        a = soup.select_one('body > div.main-wrap > div.width-wrap.with-player-container > div.player-container > a')
+        media_url = a['href']
         return media_url
 
 

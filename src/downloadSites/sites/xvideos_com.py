@@ -65,7 +65,6 @@ class Media(object):
         pattern = r"html5player\.setVideoUrl.+(http.+)'\);"
         m = re.findall(pattern, scr_string)
         url = m[-1]     # get only high quarity video url
-        url = HTMLParser.HTMLParser().unescape(url)    # fix encoding bug
         return url
 
 
