@@ -29,29 +29,23 @@ class Download(object):
         self.dl(url, path, logdir)
 
     def dl(self, url, path, logdir):
-        # --- progress function ---
-        def _progress(block_count, block_size, total_size):
-            percentage = 100.0 * block_count * block_size / total_size
-            sys.stdout.write(
-                "%.2f %% (%d KB)\r" % (percentage, total_size / 1024)
-            )
-        # --------------------------
+        # get dir path
         path = os.path.expanduser(path)
         self.check_dir(path)
 
+        # check log
         url = Codec().to_utf8(url)
         path = Codec().to_utf8(path)
         check_log = URLlog(logdir, url).check_log()
 
-        try:
-            if os.path.exists(path) or check_log:
-                print('PASS : file already exist.')
-                return
-            DownloadFile(url, path)
-        except:
-            raise
-        else:
-            URLlog(logdir, url).check_log(add_url=True)
+        # download or through
+        if os.path.exists(path) or check_log:
+            print('PASS : file already exist.')
+            return
+        DownloadFile(url, path)
+
+        # add url to log
+        URLlog(logdir, url).check_log(add_url=True)
 
     def check_dir(self, path):
         array = path.split('/')
@@ -63,36 +57,22 @@ class Download(object):
             os.makedirs(dirpath)
 
 
-class LetsDownload(object):
-    """docstring for LetsDownload"""
-    def __init__(self, **arguments):
-        super(LetsDownload, self).__init__()
-        for media in arguments['urls']:
-            self.parentDir = arguments['parentDir']
-            filename = os.path.join(self.parentDir, media['title'])
-            self.missFiles = []
+def LetsDownload(**arguments):
+    for media in arguments['urls']:
+        self.parentDir = arguments['parentDir']
+        filename = os.path.join(self.parentDir, media['title'])
+        self.missFiles = []
 
-            try:
-                print("Start Download " + media['title'] + " !!")
-                Download(media['href'], filename, self.parentDir)
-                # loader = downloader.Download(media['href'], filename)
-                # loader.download()
-            except Exception as e:
-                self.missFiles += [media]
-                print('Error DL : ' + str(e))
-                print('Miss!!\n')
-                break
-            else:
-                print('Finish Download!!\n')
-
-    def get_dir(self, title, **setting):
-        ex = title[-4:]
-        if ex == '.zip':
-            return setting['zip_place']
-        if ex == '.mp4' or ex == '.flv':
-            return setting['mp4_place']
-        if ex == '.jpg':
-            return setting['jpg_place']
+        try:
+            print("Start Download " + media['title'] + " !!")
+            Download(media['href'], filename, self.parentDir)
+        except Exception as e:
+            self.missFiles += [media]
+            print('Error DL : ' + str(e))
+            print('Miss!!\n')
+            break
+        else:
+            print('Finish Download!!\n')
 
 
 # === MAIN ===
@@ -135,7 +115,6 @@ def main():
     print('\nClean Directorys...\n')
     dirs = glob.glob(setting.pref['h_pic_place'] + '*/')
     for i in dirs:
-        i = i.replace(u'[ナルト-NARUTO]', '')
         if len(glob.glob(i + '*')) == 0:
             try:
                 os.removedirs(i)
