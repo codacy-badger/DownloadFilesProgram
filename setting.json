@@ -1,13 +1,11 @@
 {
-    "root_place": "~/Downloads/Downloaded/",
-    "h_manga_place": "~/Downloads/Downloaded/h_manga/",
-    "h_anime_place": "~/Downloads/Downloaded/h_anime/",
-    "h_video_place": "~/Downloads/Downloaded/h_video/",
-    "h_pic_place": "~/Downloads/Downloaded/h_pic/",
-    "anime_place": "~/Downloads/Downloaded/anime/",
+    "root_place": "/data/Downloaded/",
+    "h_manga_place": "/data/Downloaded/h_manga/",
+    "h_anime_place": "/data/Downloaded/h_anime/",
+    "h_video_place": "/data/Downloaded/h_video/",
+    "h_pic_place": "/data/Downloaded/h_pic/",
+    "anime_place": "/data/Downloaded/anime/",
 
-    "urls_place": "~/Downloads/Downloaded/URLlist.txt",
-    "miss_place": "~/Downloads/Downloaded/misslog.txt",
-
-    "sample_html": "~/Documents/Tools/"
+    "urls_place": "/data/Downloaded/list.txt",
+    "miss_place": "/data/Downloaded/miss.txt"
 }
