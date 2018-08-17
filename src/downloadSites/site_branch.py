@@ -32,9 +32,6 @@ class DownloadList(object):
         elif url_array[0] == 'www.xnxx.com':
             print('xnxx')
             file_status = xnxx_com.Run(url, url_array).file_status
-        elif url_array[0] == 'hentaihaven.org':
-            print('hentaihaven')
-            file_status = hentaihaven_org.Run(url, url_array).file_status
         elif url_array[0] == 'blog.livedoor.jp':
             if url_array[1] == 'wakusoku':
                 print('wakusoku')

@@ -19,18 +19,6 @@ class DownloadFile(object):
         self.dlfile(url, filename)
 
     def dlfile(self, url, filename):
-        if self.loopcnt > 3:
-            try:
-                cmd = 'wget "{}" -O "{}"'.format(url, filename)
-                print('>> ' + cmd)
-                subprocess.call(cmd, shell=True)
-                raise requests.HTTPError('over 3times')
-            except Exception as e:
-                print(e)
-                raise
-        else:
-            self.loopcnt += 1
-
         # Open the url
         try:
             r = requests.get(url, stream=True, headers=self.headers)
@@ -47,13 +35,10 @@ class DownloadFile(object):
         # handle errors
         except requests.HTTPError as e:
             print("HTTP Error:", e.code, url)
-            if not (self.loopcnt > 3):
-                self.dlfile(url, filename)
-            else:
-                raise
+            raise
         except socket.timeout as e:
-            print("Timeout Error         ")
-            self.dlfile(url, filename)
+            print("Timeout Error")
+            raise
         except Exception as e:
             raise
 
