@@ -7,8 +7,17 @@ from . import _helper
 
 
 SeqFlag = True
-
 LimitTime = None
+
+
+def run(url, limit=None):
+    # prepare variables
+    url_array = _helper.split_url(url)
+    limit_time = limit
+
+    # get type and soup
+    site_type = _get_site_type(url_array)
+
 
 
 class Run(object):

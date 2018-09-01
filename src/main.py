@@ -59,15 +59,15 @@ class Download(object):
 
 def LetsDownload(**arguments):
     for media in arguments['urls']:
-        self.parentDir = arguments['parentDir']
-        filename = os.path.join(self.parentDir, media['title'])
-        self.missFiles = []
+        parentDir = arguments['parentDir']
+        filename = os.path.join(parentDir, media['title'])
+        missFiles = []
 
         try:
             print("Start Download " + media['title'] + " !!")
-            Download(media['href'], filename, self.parentDir)
+            Download(media['href'], filename, parentDir)
         except Exception as e:
-            self.missFiles += [media]
+            missFiles += [media]
             print('Error DL : ' + str(e))
             print('Miss!!\n')
             break

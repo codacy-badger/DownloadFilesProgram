@@ -9,6 +9,13 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 
 
+def split_url(self, url):
+    url = url.replace('https', 'http')
+    url = url.replace('http://', '')
+    url_array = url.split('/')
+    return url_array
+
+
 def get_limit_time(time_string):
     limit_day = time_string
     if limit_day is None:
