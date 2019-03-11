@@ -22,6 +22,9 @@ RUN pip-review --auto
 ENV LANG ja_JP.UTF-8
 ENV LC_ALL ja_JP.UTF-8
 
+# clean
+RUN rm -rf /var/lib/apt/lists/*
+
 # user
 RUN export uid=1000 gid=1000 && \
     echo "denden047:x:${uid}:${gid}:denden047,,,::/bin/bash" >> /etc/passwd && \
